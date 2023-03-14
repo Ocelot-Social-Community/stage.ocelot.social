@@ -27,7 +27,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: 'Ocelot-Social-Community/Ocelot-Social'
-          ref: "${OCELOT_SOCIAL_TAG}"
+          ref: ${OCELOT_SOCIAL_TAG}
           path: 'ocelot/'
           fetch-depth: 0
       - name: Checkout code
