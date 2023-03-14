@@ -22,7 +22,7 @@ jobs:
       - name: Load .env
         uses: aarcangeli/load-dotenv@v1.0.0
         with:
-          quiet: false
+          quiet: true
       - name: Checkout Ocelot code
         uses: actions/checkout@v3
         with:
@@ -35,9 +35,9 @@ jobs:
         with:
           path: "ocelot/deployment/configurations/${{ env.CONFIGURATION }}"
       - name: Decrypt all secrets
-        run: ocelot/deployment/scripts/secrets.decrypt.sh
+        run: ./ocelot/deployment/scripts/secrets.decrypt.sh
       - name: Upgrade Cluster
-        run: ocelot/deployment/scripts/cluster.upgrade.sh
+        run: ./ocelot/deployment/scripts/cluster.upgrade.sh
 
       # ##########################################################################
       # # SET ENVS ###############################################################
