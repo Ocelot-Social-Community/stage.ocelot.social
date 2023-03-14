@@ -33,7 +33,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          path: "ocelot/deployment/configurations/${{ env.CONFIGURATION}"
+          path: "ocelot/deployment/configurations/${{ env.CONFIGURATION }}"
       - name: Decrypt all secrets
         run: ocelot/deployment/scripts/secrets.decrypt.sh
       - name: Upgrade Cluster
