@@ -35,9 +35,9 @@ jobs:
         with:
           path: "ocelot/deployment/configurations/${{ env.CONFIGURATION }}"
       - name: Decrypt all secrets
-        run: ./ocelot/deployment/scripts/secrets.decrypt.sh
+        run: "${{ GITHUB_WORKSPACE }}/ocelot/deployment/scripts/secrets.decrypt.sh"
       - name: Upgrade Cluster
-        run: ./ocelot/deployment/scripts/cluster.upgrade.sh
+        run: "${{ GITHUB_WORKSPACE }}/ocelot/deployment/scripts/cluster.upgrade.sh"
 
       # ##########################################################################
       # # SET ENVS ###############################################################
