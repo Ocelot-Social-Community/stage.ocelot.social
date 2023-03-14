@@ -34,10 +34,16 @@ jobs:
         uses: actions/checkout@v3
         with:
           path: "ocelot/deployment/configurations/${{ env.CONFIGURATION }}"
+      - run: |
+          ls ocelot/
+          ls ocelot/deployment
+          ls ocelot/deployment/scripts
+          ls ocelot/deployment/configurations
+          ls ocelot/deployment/configurations/this
       - name: Decrypt all secrets
-        run: "${{ GITHUB_WORKSPACE }}/ocelot/deployment/scripts/secrets.decrypt.sh"
+        run: ocelot/deployment/scripts/secrets.decrypt.sh
       - name: Upgrade Cluster
-        run: "${{ GITHUB_WORKSPACE }}/ocelot/deployment/scripts/cluster.upgrade.sh"
+        run: ocelot/deployment/scripts/cluster.upgrade.sh
 
       # ##########################################################################
       # # SET ENVS ###############################################################
