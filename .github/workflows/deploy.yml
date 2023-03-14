@@ -36,7 +36,7 @@ jobs:
           path: "ocelot/deployment/configurations/${{ env.CONFIGURATION }}"
       - name: Decrypt all secrets
         run: ocelot/deployment/scripts/secrets.decrypt.sh
-      #- name: Upgrade Cluster
-      #  run: ocelot/deployment/scripts/cluster.upgrade.sh
+      - name: Upgrade Cluster
+        run: ocelot/deployment/scripts/cluster.upgrade.sh
       - name: Reset and seed Neo4j database
         run: ocelot/deployment/scripts/cluster.reseed.sh
