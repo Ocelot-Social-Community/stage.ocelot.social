@@ -1,0 +1,131 @@
+name: publish-branded
+on:
+  repository_dispatch:
+    types: [trigger-ocelot-build-success]
+  push:
+    branches:
+      - master
+
+jobs:
+  build_branded:
+    name: Docker Build Branded
+    runs-on: ubuntu-latest
+    env:
+      SECRET: ${{ secrets.SECRET }}
+      CONFIGURATION: "this"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Decrypt .env
+        run: gpg --quiet --batch --yes --decrypt --passphrase="${SECRET}" --output .env .env.enc
+      - name: Load .env
+        uses: aarcangeli/load-dotenv@v1.0.0
+        with:
+          quiet: true
+      - name: Checkout Ocelot code
+        uses: actions/checkout@v3
+        with:
+          repository: 'Ocelot-Social-Community/Ocelot-Social'
+          ref: ${{ env.GITHUB_OCELOT_REF }}
+          path: 'ocelot/'
+          fetch-depth: 0
+      - name: Checkout Branded Repo code
+        uses: actions/checkout@v3
+        with:
+          ref: 'master'
+          path: "ocelot/deployment/configurations/${{ env.CONFIGURATION }}"
+          fetch-depth: 0
+      - name: Build branded images
+        run: |
+          deployment/scripts/branded-images.build.sh
+          docker save "ocelotsocialnetwork/backend-branded" > /tmp/backend-branded.tar
+          docker save "ocelotsocialnetwork/webapp-branded" > /tmp/webapp-branded.tar
+          docker save "ocelotsocialnetwork/maintenance-branded" > /tmp/maintenance-branded.tar
+
+      - name: Upload Artifact (Backend)
+        uses: actions/upload-artifact@v2
+        with:
+          name: docker-backend-branded
+          path: /tmp/backend-branded.tar
+
+      - name: Upload Artifact (Webapp)
+        uses: actions/upload-artifact@v2
+        with:
+          name: docker-webapp-branded
+          path: /tmp/webapp-branded.tar
+
+      - name: Upload Artifact (Maintenance)
+        uses: actions/upload-artifact@v2
+        with:
+          name: docker-maintenance-branded
+          path: /tmp/maintenance-branded.tar
+
+  upload_to_dockerhub:
+    name: Upload to Dockerhub
+    runs-on: ubuntu-latest
+    needs: [build_branded]
+    env:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      OCELOT_REF: ${{ github.event.client_payload.ref }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Decrypt .env
+        run: gpg --quiet --batch --yes --decrypt --passphrase="${SECRET}" --output .env .env.enc
+      - name: Load .env
+        uses: aarcangeli/load-dotenv@v1.0.0
+        with:
+          quiet: true
+      - name: Checkout Ocelot code
+        uses: actions/checkout@v3
+        with:
+          repository: 'Ocelot-Social-Community/Ocelot-Social'
+          ref: ${{ env.GITHUB_OCELOT_REF }}
+          path: 'ocelot/'
+          fetch-depth: 0
+
+      - name: Download Docker Image (Backend)
+        uses: actions/download-artifact@v2
+        with:
+          name: docker-backend-branded
+          path: /tmp
+      - name: Load Docker Image
+        run: docker load < /tmp/backend-branded.tar
+
+      - name: Download Docker Image (Webapp)
+        uses: actions/download-artifact@v2
+        with:
+          name: docker-webapp-branded
+          path: /tmp
+      - name: Load Docker Image
+        run: docker load < /tmp/webapp-branded.tar
+
+      - name: Download Docker Image (Maintenance)
+        uses: actions/download-artifact@v2
+        with:
+          name: docker-maintenance-branded
+          path: /tmp
+      - name: Load Docker Image
+        run: docker load < /tmp/maintenance-branded.tar
+
+      - name: Upload to dockerhub
+        run: deployment/scripts/branded-images.upload.sh
+
+# TODO correct version
+  build_trigger:
+    name: Trigger successful brand build
+    runs-on: ubuntu-latest
+    needs: [github_tag]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Fetch full History for changelog
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ github.token }}
+          event-type: trigger-ocelot-brand-build-success
+          repository: ${{ github.repository }}
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "VERSION": "${{ github.event.client_payload.VERSION }}", "BUILD_DATE": "${{ github.event.client_payload.BUILD_DATE }}", "BUILD_COMMIT": "${{ github.event.client_payload.BUILD_COMMIT }}", "BUILD_VERSION": "${{ github.event.client_payload.BUILD_VERSION }}"}'

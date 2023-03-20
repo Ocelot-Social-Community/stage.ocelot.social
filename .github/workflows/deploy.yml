@@ -2,10 +2,7 @@ name: deploy
 
 on:
   repository_dispatch:
-    types: [trigger-build-success]
-  push:
-    branches:
-      - master
+    types: [trigger-ocelot-brand-build-success]
 
 jobs:
   deploy:
@@ -29,7 +26,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: 'Ocelot-Social-Community/Ocelot-Social'
-          ref: ${{ env.GITHUB_OCELOT_TAG }}
+          ref: ${{ env.GITHUB_OCELOT_REF }}
           path: 'ocelot/'
           fetch-depth: 0
       - name: Checkout code
