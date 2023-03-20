@@ -230,4 +230,4 @@ jobs:
           token: ${{ github.token }}
           event-type: trigger-ocelot-brand-build-success
           repository: ${{ github.repository }}
-          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", ref_ocelot: "${{ github.event.client_payload.ref }}", sha_ocelot: "${{ github.event.client_payload.sha }}", "OCELOT_VERSION": "${{ env.OCELOT_VERSION }}", "BRANDED_VERSION": "${{ env.BRANDED_VERSION }}", "BUILD_DATE": "${{ env.BUILD_DATE }}", "BUILD_COMMIT": "${{ env.BUILD_COMMIT }}", "BUILD_VERSION": "${{ env.BUILD_VERSION }}"}'
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "ref_ocelot": "${{ github.event.client_payload.ref }}", "sha_ocelot": "${{ github.event.client_payload.sha }}", "OCELOT_VERSION": "${{ env.OCELOT_VERSION }}", "BRANDED_VERSION": "${{ env.BRANDED_VERSION }}", "BUILD_DATE": "${{ env.BUILD_DATE }}", "BUILD_COMMIT": "${{ env.BUILD_COMMIT }}", "BUILD_VERSION": "${{ env.BUILD_VERSION }}"}'
