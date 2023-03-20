@@ -37,7 +37,7 @@ jobs:
           fetch-depth: 0
       - name: Build branded images
         run: |
-          deployment/scripts/branded-images.build.sh
+          ocelot/deployment/scripts/branded-images.build.sh
           docker save "ocelotsocialnetwork/backend-branded" > /tmp/backend-branded.tar
           docker save "ocelotsocialnetwork/webapp-branded" > /tmp/webapp-branded.tar
           docker save "ocelotsocialnetwork/maintenance-branded" > /tmp/maintenance-branded.tar
@@ -109,7 +109,7 @@ jobs:
         run: docker load < /tmp/maintenance-branded.tar
 
       - name: Upload to dockerhub
-        run: deployment/scripts/branded-images.upload.sh
+        run: ocelot/deployment/scripts/branded-images.upload.sh
 
   github_tag:
     name: Tag latest version on Github
