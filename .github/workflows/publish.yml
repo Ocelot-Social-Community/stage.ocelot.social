@@ -142,7 +142,7 @@ jobs:
       - name: package-version-to-git-tag + build number
         uses: pkgdeps/git-tag-action@v2
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ github.token }} #${{ secrets.GITHUB_TOKEN }}
           github_repo: ${{ github.repository }}
           version: ${{ env.BUILD_VERSION }}
           git_commit_sha: ${{ github.sha }}
