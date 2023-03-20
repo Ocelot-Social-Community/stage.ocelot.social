@@ -13,6 +13,7 @@ jobs:
     env:
       SECRET: ${{ secrets.SECRET }}
       CONFIGURATION: "this"
+      GITHUB_OCELOT_REF_JUST_BUILT: ${{ github.event.client_payload.ref }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -22,6 +23,12 @@ jobs:
         uses: aarcangeli/load-dotenv@v1.0.0
         with:
           quiet: true
+      - name: Set GITHUB_OCELOT_REF
+        run: |
+          if [ -z ${GITHUB_OCELOT_REF} ]; then
+            echo "GITHUB_OCELOT_REF=${GITHUB_OCELOT_REF_JUST_BUILT}" >> $GITHUB_ENV
+          fi
+        shell: bash
       - name: Checkout Ocelot code
         uses: actions/checkout@v3
         with:
@@ -174,12 +181,30 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+      - name: Decrypt .env
+        run: gpg --quiet --batch --yes --decrypt --passphrase="${{ env.SECRET }}" --output .env .env.enc
+      - name: Load .env
+        uses: aarcangeli/load-dotenv@v1.0.0
         with:
-          fetch-depth: 0 # Fetch full History for changelog
+          quiet: true
+      - name: Checkout Ocelot code
+        uses: actions/checkout@v3
+        with:
+          repository: 'Ocelot-Social-Community/Ocelot-Social'
+          ref: ${{ env.GITHUB_OCELOT_REF }}
+          path: 'ocelot/'
+          fetch-depth: 0 
+      - name: Setup env
+        run: |
+          echo "OCELOT_VERSION=$(node -p -e "require('./ocelot/package.json').version")" >> $GITHUB_ENV
+          echo "BRANDED_VERSION=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
+          echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+          echo "BUILD_COMMIT=${GITHUB_SHA}" >> $GITHUB_ENV
+      - run: echo "BUILD_VERSION=${BRANDED_VERSION}-ocelot.social${OCELOT_VERSION}" >> $GITHUB_ENV
       - name: Repository Dispatch
         uses: peter-evans/repository-dispatch@v2
         with:
           token: ${{ github.token }}
           event-type: trigger-ocelot-brand-build-success
           repository: ${{ github.repository }}
-          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "VERSION": "${{ github.event.client_payload.VERSION }}", "BUILD_DATE": "${{ github.event.client_payload.BUILD_DATE }}", "BUILD_COMMIT": "${{ github.event.client_payload.BUILD_COMMIT }}", "BUILD_VERSION": "${{ github.event.client_payload.BUILD_VERSION }}"}'
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "OCELOT_VERSION": "${{ env.OCELOT_VERSION }}", "BRANDED_VERSION": "${{ env.BRANDED_VERSION }}", "BUILD_DATE": "${{ env.BUILD_DATE }}", "BUILD_COMMIT": "${{ env.BUILD_COMMIT }}", "BUILD_VERSION": "${{ env.BUILD_VERSION }}"}'

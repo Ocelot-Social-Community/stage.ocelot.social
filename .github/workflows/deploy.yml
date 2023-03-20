@@ -13,6 +13,7 @@ jobs:
     env:
       SECRET: ${{ secrets.SECRET }}
       CONFIGURATION: "this"
+      DOCKERHUB_OCELOT_TAG_JUST_BUILT: ${{ github.event.client_payload.BUILD_VERSION }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -22,6 +23,12 @@ jobs:
         uses: aarcangeli/load-dotenv@v1.0.0
         with:
           quiet: true
+      - name: Set DOCKERHUB_OCELOT_TAG
+        run: |
+          if [ -z ${DOCKERHUB_OCELOT_TAG} ]; then
+            echo "DOCKERHUB_OCELOT_TAG=${DOCKERHUB_OCELOT_TAG_JUST_BUILT}" >> $GITHUB_ENV
+          fi
+        shell: bash
       - name: Checkout Ocelot code
         uses: actions/checkout@v3
         with:
