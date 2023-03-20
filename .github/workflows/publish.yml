@@ -116,11 +116,13 @@ jobs:
     name: Tag latest version on Github
     runs-on: ubuntu-latest
     needs: [upload_to_dockerhub]
+    env:
+      SECRET: ${{ secrets.SECRET }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Decrypt .env
-        run: gpg --quiet --batch --yes --decrypt --passphrase="${SECRET}" --output .env .env.enc
+        run: gpg --quiet --batch --yes --decrypt --passphrase="${{ env.SECRET }}" --output .env .env.enc
       - name: Load .env
         uses: aarcangeli/load-dotenv@v1.0.0
         with:
