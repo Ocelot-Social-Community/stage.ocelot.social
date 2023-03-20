@@ -37,5 +37,7 @@ jobs:
         run: ocelot/deployment/scripts/secrets.decrypt.sh
       - name: Upgrade Cluster
         run: ocelot/deployment/scripts/cluster.upgrade.sh
+      - name: Sleep for 4 minutes
+        run: sleep 240s
       - name: Reset and seed Neo4j database
         run: ocelot/deployment/scripts/cluster.reseed.sh
