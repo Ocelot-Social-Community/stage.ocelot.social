@@ -75,6 +75,7 @@ jobs:
       SECRET: ${{ secrets.SECRET }}
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+      GITHUB_OCELOT_REF_JUST_BUILT: ${{ github.event.client_payload.ref }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -84,6 +85,12 @@ jobs:
         uses: aarcangeli/load-dotenv@v1.0.0
         with:
           quiet: true
+      - name: Set GITHUB_OCELOT_REF
+        run: |
+          if [ -z ${GITHUB_OCELOT_REF} ]; then
+            echo "GITHUB_OCELOT_REF=${GITHUB_OCELOT_REF_JUST_BUILT}" >> $GITHUB_ENV
+          fi
+        shell: bash
       - name: Checkout Ocelot code
         uses: actions/checkout@v3
         with:
@@ -125,6 +132,7 @@ jobs:
     needs: [upload_to_dockerhub]
     env:
       SECRET: ${{ secrets.SECRET }}
+      GITHUB_OCELOT_REF_JUST_BUILT: ${{ github.event.client_payload.ref }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -134,6 +142,12 @@ jobs:
         uses: aarcangeli/load-dotenv@v1.0.0
         with:
           quiet: true
+      - name: Set GITHUB_OCELOT_REF
+        run: |
+          if [ -z ${GITHUB_OCELOT_REF} ]; then
+            echo "GITHUB_OCELOT_REF=${GITHUB_OCELOT_REF_JUST_BUILT}" >> $GITHUB_ENV
+          fi
+        shell: bash
       - name: Checkout Ocelot code
         uses: actions/checkout@v3
         with:
@@ -180,6 +194,7 @@ jobs:
     needs: [github_tag]
     env:
       SECRET: ${{ secrets.SECRET }}
+      GITHUB_OCELOT_REF_JUST_BUILT: ${{ github.event.client_payload.ref }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -189,6 +204,12 @@ jobs:
         uses: aarcangeli/load-dotenv@v1.0.0
         with:
           quiet: true
+      - name: Set GITHUB_OCELOT_REF
+        run: |
+          if [ -z ${GITHUB_OCELOT_REF} ]; then
+            echo "GITHUB_OCELOT_REF=${GITHUB_OCELOT_REF_JUST_BUILT}" >> $GITHUB_ENV
+          fi
+        shell: bash
       - name: Checkout Ocelot code
         uses: actions/checkout@v3
         with:
@@ -209,4 +230,4 @@ jobs:
           token: ${{ github.token }}
           event-type: trigger-ocelot-brand-build-success
           repository: ${{ github.repository }}
-          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "OCELOT_VERSION": "${{ env.OCELOT_VERSION }}", "BRANDED_VERSION": "${{ env.BRANDED_VERSION }}", "BUILD_DATE": "${{ env.BUILD_DATE }}", "BUILD_COMMIT": "${{ env.BUILD_COMMIT }}", "BUILD_VERSION": "${{ env.BUILD_VERSION }}"}'
+          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", ref_ocelot: "${{ github.event.client_payload.ref }}", sha_ocelot: "${{ github.event.client_payload.sha }}", "OCELOT_VERSION": "${{ env.OCELOT_VERSION }}", "BRANDED_VERSION": "${{ env.BRANDED_VERSION }}", "BUILD_DATE": "${{ env.BUILD_DATE }}", "BUILD_COMMIT": "${{ env.BUILD_COMMIT }}", "BUILD_VERSION": "${{ env.BUILD_VERSION }}"}'
