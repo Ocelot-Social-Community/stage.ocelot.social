@@ -17,7 +17,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Decrypt .env
-        run: gpg --quiet --batch --yes --decrypt --passphrase="${SECRET}" --output .env .env.enc
+        run: gpg --quiet --batch --yes --decrypt --passphrase="${{ env.SECRET }}" --output .env .env.enc
       - name: Load .env
         uses: aarcangeli/load-dotenv@v1.0.0
         with:
