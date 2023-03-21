@@ -169,7 +169,7 @@ jobs:
       - name: Set OCELOT_GITHUB_RUN_NUMBER
         run: |
           if [ -z ${OCELOT_GITHUB_RUN_NUMBER} ]; then
-            echo "OCELOT_GITHUB_RUN_NUMBER=${GITHUB_OCELOT_REF}"" >> $GITHUB_ENV
+            echo "OCELOT_GITHUB_RUN_NUMBER=${GITHUB_OCELOT_REF}" >> $GITHUB_ENV
           fi
           if [ -z ${OCELOT_GITHUB_RUN_NUMBER} ]; then
             echo "OCELOT_GITHUB_RUN_NUMBER=master" >> $GITHUB_ENV
@@ -240,7 +240,7 @@ jobs:
       - name: Set OCELOT_GITHUB_RUN_NUMBER
         run: |
           if [ -z ${OCELOT_GITHUB_RUN_NUMBER} ]; then
-            echo "OCELOT_GITHUB_RUN_NUMBER=${GITHUB_OCELOT_REF}"" >> $GITHUB_ENV
+            echo "OCELOT_GITHUB_RUN_NUMBER=${GITHUB_OCELOT_REF}" >> $GITHUB_ENV
           fi
           if [ -z ${OCELOT_GITHUB_RUN_NUMBER} ]; then
             echo "OCELOT_GITHUB_RUN_NUMBER=master" >> $GITHUB_ENV
