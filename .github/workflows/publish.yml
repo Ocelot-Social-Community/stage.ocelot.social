@@ -37,6 +37,15 @@ jobs:
           ref: ${{ env.GITHUB_OCELOT_REF }}
           path: 'ocelot/'
           fetch-depth: 0
+      - name: Set OCELOT_GITHUB_RUN_NUMBER
+        run: |
+          if [ -z ${OCELOT_GITHUB_RUN_NUMBER} ]; then
+            echo "OCELOT_GITHUB_RUN_NUMBER=${GITHUB_OCELOT_REF}"" >> $GITHUB_ENV
+          fi
+          if [ -z ${OCELOT_GITHUB_RUN_NUMBER} ]; then
+            echo "OCELOT_GITHUB_RUN_NUMBER=master" >> $GITHUB_ENV
+          fi
+        shell: bash
       - name: Checkout Branded Repo code
         uses: actions/checkout@v3
         with:
@@ -77,7 +86,6 @@ jobs:
       DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
       GITHUB_OCELOT_REF_JUST_BUILT: ${{ github.event.client_payload.ref }}
-      OCELOT_GITHUB_RUN_NUMBER: ${{ github.event.client_payload.GITHUB_RUN_NUMBER }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -161,6 +169,9 @@ jobs:
       - name: Set OCELOT_GITHUB_RUN_NUMBER
         run: |
           if [ -z ${OCELOT_GITHUB_RUN_NUMBER} ]; then
+            echo "OCELOT_GITHUB_RUN_NUMBER=${GITHUB_OCELOT_REF}"" >> $GITHUB_ENV
+          fi
+          if [ -z ${OCELOT_GITHUB_RUN_NUMBER} ]; then
             echo "OCELOT_GITHUB_RUN_NUMBER=master" >> $GITHUB_ENV
           fi
         shell: bash
@@ -228,6 +239,9 @@ jobs:
           fetch-depth: 0
       - name: Set OCELOT_GITHUB_RUN_NUMBER
         run: |
+          if [ -z ${OCELOT_GITHUB_RUN_NUMBER} ]; then
+            echo "OCELOT_GITHUB_RUN_NUMBER=${GITHUB_OCELOT_REF}"" >> $GITHUB_ENV
+          fi
           if [ -z ${OCELOT_GITHUB_RUN_NUMBER} ]; then
             echo "OCELOT_GITHUB_RUN_NUMBER=master" >> $GITHUB_ENV
           fi
