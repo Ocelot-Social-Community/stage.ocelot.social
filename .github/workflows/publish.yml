@@ -55,9 +55,9 @@ jobs:
       - name: Build branded images
         run: |
           ocelot/deployment/scripts/branded-images.build.sh
-          docker save "ocelotsocialnetwork/backend-branded" > /tmp/backend-branded.tar
-          docker save "ocelotsocialnetwork/webapp-branded" > /tmp/webapp-branded.tar
-          docker save "ocelotsocialnetwork/maintenance-branded" > /tmp/maintenance-branded.tar
+          docker save "ocelotsocialnetwork/backend-${DOCKERHUB_BRAND_VARRIANT}" > /tmp/backend-branded.tar
+          docker save "ocelotsocialnetwork/webapp-${DOCKERHUB_BRAND_VARRIANT}" > /tmp/webapp-branded.tar
+          docker save "ocelotsocialnetwork/maintenance-${DOCKERHUB_BRAND_VARRIANT}" > /tmp/maintenance-branded.tar
 
       - name: Upload Artifact (Backend)
         uses: actions/upload-artifact@v2
