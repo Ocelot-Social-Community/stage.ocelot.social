@@ -30,6 +30,11 @@ jobs:
             echo "GITHUB_OCELOT_REF=${GITHUB_OCELOT_REF_JUST_BUILT}" >> $GITHUB_ENV
           fi
         shell: bash
+      - name: Set DOCKERHUB_ORGANISATION
+        run: |
+          if [ -z ${DOCKERHUB_ORGANISATION} ]; then
+            echo "DOCKERHUB_ORGANISATION=ocelotsocialnetwork" >> $GITHUB_ENV
+          fi
       - name: Checkout Ocelot code
         uses: actions/checkout@v3
         with:
@@ -55,9 +60,9 @@ jobs:
       - name: Build branded images
         run: |
           ocelot/deployment/scripts/branded-images.build.sh
-          docker save "ocelotsocialnetwork/backend-${DOCKERHUB_BRAND_VARRIANT}" > /tmp/backend-branded.tar
-          docker save "ocelotsocialnetwork/webapp-${DOCKERHUB_BRAND_VARRIANT}" > /tmp/webapp-branded.tar
-          docker save "ocelotsocialnetwork/maintenance-${DOCKERHUB_BRAND_VARRIANT}" > /tmp/maintenance-branded.tar
+          docker save "${DOCKERHUB_ORGANISATION}/backend-${DOCKERHUB_BRAND_VARRIANT}" > /tmp/backend-branded.tar
+          docker save "${DOCKERHUB_ORGANISATION}/webapp-${DOCKERHUB_BRAND_VARRIANT}" > /tmp/webapp-branded.tar
+          docker save "${DOCKERHUB_ORGANISATION}/maintenance-${DOCKERHUB_BRAND_VARRIANT}" > /tmp/maintenance-branded.tar
 
       - name: Upload Artifact (Backend)
         uses: actions/upload-artifact@v2
