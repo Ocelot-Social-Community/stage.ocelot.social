@@ -8,7 +8,7 @@ jobs:
   deploy:
     # see example https://github.com/do-community/example-doctl-action
     # see example https://github.com/do-community/example-doctl-action/blob/main/.github/workflows/workflow.yaml
-    name: Deploy defined version to stage.ocelot.social cluster at DigitalOcean
+    name: Deploy defined version to cluster
     runs-on: ubuntu-latest
     env:
       SECRET: ${{ secrets.SECRET }}
