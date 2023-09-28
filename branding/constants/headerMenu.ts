@@ -4,10 +4,10 @@ export default {
     //   nameIdent: 'nameIdent',
     //   path: '/',
     // },
-    // {
-    //   nameIdent: 'nameIdent',
-    //   url: 'https://ocelot.social',
-    //   target: '_blank',
-    // },
+    {
+      nameIdent: 'freilernensocialRebranding.header.asp',
+      url: 'https://freilernen.com',
+      target: '_blank',
+    },
   ],
 }
