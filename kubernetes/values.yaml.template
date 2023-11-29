@@ -29,6 +29,11 @@ BACKEND:
   # SMTP_PORT: "465"
   # SMTP_IGNORE_TLS: 'true'
   # SMTP_SECURE: 'true' # true for 465, false for other ports
+  # optional
+  SMTP_DKIM_DOMAINNAME: ocelot.social
+  SMTP_DKIM_KEYSELECTOR: 2017
+  # all newlines in one line with "\\n". multi line doesn't work with Helm
+  SMTP_DKIM_PRIVATKEY: "-----BEGIN RSA PRIVATE KEY-----\\n<private.key>\\n-----END RSA PRIVATE KEY-----\\n"
 
   # most likely you don't need to change this
   MIN_READY_SECONDS: "15"
