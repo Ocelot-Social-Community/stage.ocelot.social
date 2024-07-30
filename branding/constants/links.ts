@@ -22,7 +22,6 @@ const ORGANIZATION = defaultPageParamsPages.ORGANIZATION.overwrite({
 const DONATE = defaultPageParamsPages.DONATE.overwrite({
   // if defined it's dominating
   externalLink: {
-    // we use 'ocelot-social.herokuapp.com' at the moment, because redirections of 'ocelot.social' subpages are not working correctly
     url: 'https://busfaktor.org/en/spenden',
     target: '_blank',
   },
@@ -40,7 +39,6 @@ const DONATE = defaultPageParamsPages.DONATE.overwrite({
 const IMPRINT = defaultPageParamsPages.IMPRINT.overwrite({
   // if defined it's dominating
   externalLink: {
-    // we use 'ocelot-social.herokuapp.com' at the moment, because redirections of 'ocelot.social' subpages are not working correctly
     url: 'http://ocelot.social/en/impressum',
     target: '_blank',
   },
