@@ -4,10 +4,10 @@ import { defaultPageParamsPages } from '~/components/utils/InternalPages.js'
 
 const ORGANIZATION = defaultPageParamsPages.ORGANIZATION.overwrite({
   // if defined it's dominating
-  externalLink: {
-    url: 'https://ocelot.social',
-    target: '_blank',
-  },
+  // externalLink: {
+  //   url: 'https://ocelot.social',
+  //   target: '_blank',
+  // },
 
   internalPage: {
     // footerIdent: 'site.made', // localized string identifier, if undefined default is used
@@ -21,11 +21,10 @@ const ORGANIZATION = defaultPageParamsPages.ORGANIZATION.overwrite({
 })
 const DONATE = defaultPageParamsPages.DONATE.overwrite({
   // if defined it's dominating
-  externalLink: {
-    // we use 'ocelot-social.herokuapp.com' at the moment, because redirections of 'ocelot.social' subpages are not working correctly
-    url: 'https://busfaktor.org/en/spenden',
-    target: '_blank',
-  },
+  // externalLink: {
+  //   url: 'https://ocelot.social/en/donate/',
+  //   target: '_blank',
+  // },
 
   internalPage: {
     // footerIdent: 'site.donate', // localized string identifier, if undefined default is used
@@ -39,11 +38,10 @@ const DONATE = defaultPageParamsPages.DONATE.overwrite({
 })
 const IMPRINT = defaultPageParamsPages.IMPRINT.overwrite({
   // if defined it's dominating
-  externalLink: {
-    // we use 'ocelot-social.herokuapp.com' at the moment, because redirections of 'ocelot.social' subpages are not working correctly
-    url: 'http://ocelot.social/en/impressum',
-    target: '_blank',
-  },
+  // externalLink: {
+  //   url: 'http://ocelot.social/en/imprint/',
+  //   target: '_blank',
+  // },
 
   internalPage: {
     // footerIdent: 'site.imprint', // localized string identifier, if undefined default is used
@@ -109,10 +107,10 @@ const FAQ = defaultPageParamsPages.FAQ.overwrite({
 })
 const SUPPORT = defaultPageParamsPages.SUPPORT.overwrite({
   // if defined it's dominating
-  externalLink: {
-    url: 'https://ocelot.social',
-    target: '_blank',
-  },
+  // externalLink: {
+  //   url: 'https://ocelot.social/en/contact/',
+  //   target: '_blank',
+  // },
 
   internalPage: {
     // footerIdent: 'site.support', // localized string identifier, if undefined default is used
@@ -126,7 +124,7 @@ const SUPPORT = defaultPageParamsPages.SUPPORT.overwrite({
 })
 
 export default {
-  LANDING_PAGE: '/login', // examples: '/login', '/registration', '/organization', or external 'https://ocelot.social'
+  LANDING_PAGE: '/organization', // examples: '/login', '/registration', '/organization', or external 'https://ocelot.social'
 
   // you can find and store templates for 👇🏼 at https://github.com/Ocelot-Social-Community/Ocelot-Social-Deploy-Rebranding/tree/master/branding/templates/
 
@@ -144,9 +142,9 @@ export default {
     TERMS_AND_CONDITIONS,
     CODE_OF_CONDUCT,
     DATA_PRIVACY,
-    FAQ,
     DONATE,
-    IMPRINT,
+    FAQ,
     SUPPORT,
+    IMPRINT,
   ],
 }
