@@ -1,5 +1,5 @@
 {{ $image_tag:= env "IMAGE_TAG" | default (exec "../scripts/image_tag.sh" (list) | trim) }}
 
-domain: reformer-network-staging.roschaefer.de
-namespace: reformer-network-staging
+domain: ocelot-social.roschaefer.de
+namespace: ocelot-staging
 image_tag: {{ $image_tag }}
