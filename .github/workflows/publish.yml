@@ -1,6 +1,16 @@
 name: publish
 
-on: push
+on:
+  workflow_dispatch:
+    inputs:
+      ocelot_version:
+        description: Ocelot build image version
+        required: true
+        type: string
+      deploy:
+        description: Deploy to cluster
+        required: true
+        type: boolean
 
 jobs:
   build-and-push-images:
@@ -38,13 +48,13 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            type=schedule
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=ref,event=branch
-            type=ref,event=pr
-            type=sha
+            type=schedule,prefix=ocelot-${{ inputs.ocelot_version }}--branded-
+            type=semver,pattern={{version}},prefix=ocelot-${{ inputs.ocelot_version }}--branded-
+            type=semver,pattern={{major}}.{{minor}},prefix=ocelot-${{ inputs.ocelot_version }}--branded-
+            type=semver,pattern={{major}},prefix=ocelot-${{ inputs.ocelot_version }}--branded-
+            type=ref,event=branch,prefix=ocelot-${{ inputs.ocelot_version }}--branded-
+            type=ref,event=pr,prefix=ocelot-${{ inputs.ocelot_version }}--branded-
+            type=sha,prefix=ocelot-${{ inputs.ocelot_version }}--branded-sha-
       - name: Build and push Docker images
         id: push
         uses: docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75
@@ -53,13 +63,13 @@ jobs:
           context: .
           push: true
           build-args: |
-              OCELOT_VERSION=hetzner
+              OCELOT_VERSION=${{ inputs.ocelot_version }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
   deploy-to-kubernetes:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/staging'
+    if: ${{ inputs.deploy }}
     needs: build-and-push-images
     steps:
       - uses: mdgreenwald/mozilla-sops-action@d9714e521cbaecdae64a89d2fdd576dd2aa97056 # v1.6.0
@@ -73,7 +83,7 @@ jobs:
           mkdir -p ~/.kube
           sops decrypt ./helmfile/secrets/kubeconfig > ~/.kube/config
           chmod 600 ~/.kube/config
-      # - run: echo "IMAGE_TAG=sha-$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_ENV
+      - run: echo "IMAGE_TAG=ocelot-${{ inputs.ocelot_version }}--branded-sha-$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_ENV
       - uses: helmfile/helmfile-action@80fbb6408b98822310f94d8d1321a2cacf87f78f #v1.9.2
         with:
           helmfile-args: apply --environment staging

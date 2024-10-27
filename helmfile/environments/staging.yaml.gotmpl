@@ -1,5 +1,3 @@
-{{ $image_tag:= env "IMAGE_TAG" | default (exec "../scripts/image_tag.sh" (list) | trim) }}
-
-domain: ocelot-social.roschaefer.de
+domain: staging.ocelot-social.roschaefer.de
 namespace: ocelot-staging
-image_tag: {{ $image_tag }}
+image_tag: {{ requiredEnv "IMAGE_TAG" }}

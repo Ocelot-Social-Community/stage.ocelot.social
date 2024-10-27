@@ -1,18 +1,12 @@
 ---
 environments:
-  default:
-    values:
-      - ./environments/default.yaml.gotmpl
   staging:
     values:
       - ./environments/staging.yaml.gotmpl
-  production:
-    values:
-      - ./environments/production.yaml.gotmpl
 ---
 repositories:
   - name: ocelot-social
-    url: git+https://github.com/Ocelot-Social-Community/Ocelot-Social@deployment/hetzner/helmfile/ocelot-social?ref=hetzner
+    url: git+https://github.com/Ocelot-Social-Community/Ocelot-Social@deployment/helm/chart?ref=hetzner
 
 apiVersions:
   - monitoring.coreos.com/v1
