@@ -8,9 +8,6 @@ repositories:
   - name: ocelot-social
     url: git+https://github.com/Ocelot-Social-Community/Ocelot-Social@deployment/helm/chart?ref=hetzner
 
-apiVersions:
-  - monitoring.coreos.com/v1
-
 releases:
   - name: ocelot-social
     namespace: {{ .StateValues.namespace }}
