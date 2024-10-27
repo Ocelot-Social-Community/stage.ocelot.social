@@ -83,9 +83,10 @@ jobs:
           mkdir -p ~/.kube
           sops decrypt ./helmfile/secrets/kubeconfig > ~/.kube/config
           chmod 600 ~/.kube/config
-      - run: echo "IMAGE_TAG=ocelot-${{ inputs.ocelot_version }}--branded-sha-$(echo $GITHUB_SHA | cut -c 1-7)" >> $GITHUB_ENV
       - uses: helmfile/helmfile-action@80fbb6408b98822310f94d8d1321a2cacf87f78f #v1.9.2
         with:
+          env:
+            OCELOT_IMAGE_TAG: ${{ inputs.ocelot_version }}
           helmfile-args: apply
           helmfile-workdirectory: ./helmfile
           helm-plugins: >
