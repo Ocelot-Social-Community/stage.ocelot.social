@@ -1,6 +1,6 @@
 services:
   webapp:
-    image: ghcr.io/it4change/reformer.network/webapp:ocelot-${OCELOT_VERSION:-master}--branded-${BRANDED_VERSION:-master}
+    image: ghcr.io/it4change/reformer.network/webapp
     build:
       context: .
       dockerfile: ./docker/backend.Dockerfile
@@ -15,7 +15,7 @@ services:
       - backend
 
   backend:
-    image: ghcr.io/it4change/reformer.network/backend:ocelot-${OCELOT_VERSION:-master}--branded-${BRANDED_VERSION:-master}
+    image: ghcr.io/it4change/reformer.network/backend
     build:
       context: .
       dockerfile: ./docker/webapp.Dockerfile
@@ -32,7 +32,7 @@ services:
       - neo4j
 
   maintenance:
-    image: ghcr.io/it4change/reformer.network/maintenance:ocelot-${OCELOT_VERSION:-master}--branded-${BRANDED_VERSION:-master}
+    image: ghcr.io/it4change/reformer.network/maintenance
     build:
       context: .
       dockerfile: ./docker/maintenance.Dockerfile
@@ -43,7 +43,7 @@ services:
       - 3001:80
 
   neo4j:
-    image: ghcr.io/ocelot-social-community/ocelot-social/neo4j:${OCELOT_VERSION:-master}
+    image: ghcr.io/ocelot-social-community/ocelot-social/neo4j
     environment:
       NEO4J_AUTH: none
       NEO4J_dbms_allow__format__migration: "true"
