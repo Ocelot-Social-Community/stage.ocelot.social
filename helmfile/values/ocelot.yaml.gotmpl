@@ -14,7 +14,7 @@ global:
 
 backend:
   image:
-    repository: ghcr.io/ocelot-social-community/stage.ocelot.social/backend
+    repository: ghcr.io/it4change/reformer.network/backend
     tag: {{ .StateValues.image_tag }}
   storage: "10Gi"
   env:
@@ -25,12 +25,12 @@ backend:
 
 webapp:
   image:
-    repository: ghcr.io/ocelot-social-community/stage.ocelot.social/webapp
+    repository: ghcr.io/it4change/reformer.network/webapp
     tag: {{ .StateValues.image_tag }}
 
 maintenance:
   image:
-    repository: ghcr.io/ocelot-social-community/stage.ocelot.social/maintenance
+    repository: ghcr.io/it4change/reformer.network/maintenance
     tag: {{ .StateValues.image_tag }}
 
 neo4j:
