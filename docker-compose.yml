@@ -3,12 +3,15 @@ services:
     image: ghcr.io/it4change/reformer.network/webapp
     build:
       context: .
-      dockerfile: ./docker/backend.Dockerfile
+      dockerfile: ./docker/webapp.Dockerfile
       target: branded
       args:
         OCELOT_VERSION: ${OCELOT_VERSION:-master}
     environment:
-      GRAPHQL_URI: http://backend:4000
+      HOST: 0.0.0.0
+      WEBSOCKETS_URI: ws://localhost:3000/api/graphql
+      GRAPHQL_URI: http://backend:4000/
+      MAPBOX_TOKEN: "pk.eyJ1IjoiYnVzZmFrdG9yIiwiYSI6ImNraDNiM3JxcDBhaWQydG1uczhpZWtpOW4ifQ.7TNRTO-o9aK1Y6MyW_Nd4g"
     ports:
       - 3000:3000
     depends_on:
@@ -18,7 +21,7 @@ services:
     image: ghcr.io/it4change/reformer.network/backend
     build:
       context: .
-      dockerfile: ./docker/webapp.Dockerfile
+      dockerfile: ./docker/backend.Dockerfile
       target: branded
       args:
         OCELOT_VERSION: ${OCELOT_VERSION:-master}
@@ -26,6 +29,9 @@ services:
       CLIENT_URI: http://localhost:3000
       GRAPHQL_URI: http://backend:4000
       NEO4J_URI: bolt://neo4j:7687
+      MAPBOX_TOKEN: "pk.eyJ1IjoiYnVzZmFrdG9yIiwiYSI6ImNraDNiM3JxcDBhaWQydG1uczhpZWtpOW4ifQ.7TNRTO-o9aK1Y6MyW_Nd4g"
+      JWT_SECRET: "b/&&7b78BF&fv/Vd"
+      PRIVATE_KEY_PASSPHRASE: "a7dsf78sadg87ad87sfagsadg78"
     ports:
       - 4000:4000
     depends_on:
@@ -43,7 +49,7 @@ services:
       - 3001:80
 
   neo4j:
-    image: ghcr.io/ocelot-social-community/ocelot-social/neo4j
+    image: ghcr.io/ocelot-social-community/ocelot-social/neo4j:master
     environment:
       NEO4J_AUTH: none
       NEO4J_dbms_allow__format__migration: "true"
