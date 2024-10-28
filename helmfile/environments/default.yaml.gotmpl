@@ -1,5 +1,5 @@
-{{ $branded_image_tag:= env "BRANDED_IMAGE_TAG" | default (exec "../scripts/image_tag.sh" (list) | trim) }}
-{{ $ocelot_image_tag := env "OCELOT_IMAGE_TAG" | default "master" }}
+{{ $branded_image_tag:= env "BRANDED_IMAGE_TAG" | default (exec "../scripts/branded_image_tag.sh" (list) | trim) }}
+{{ $ocelot_image_tag := env "OCELOT_IMAGE_TAG" | default  (exec "../scripts/ocelot_image_tag.sh" (list) | trim) }}
 
 domain: staging.reformer-network.roschaefer.de
 namespace: reformer-network-staging
