@@ -19,7 +19,7 @@ releases:
 
   - name: ocelot-neo4j
     namespace: {{ .StateValues.namespace }}
-    chart: ocelot-social/ocelot-social
+    chart: ocelot-social/ocelot-neo4j
     values:
     - ./values/ocelot.yaml.gotmpl
     secrets:
