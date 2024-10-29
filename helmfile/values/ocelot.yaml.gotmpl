@@ -1,21 +1,18 @@
 domain: {{ .StateValues.domain }}
 
 cert_manager:
-  issuer: reformer-network-letsencrypt-prod
-
-cert_manager:
   issuer: {{ .Release.Name }}-letsencrypt-prod
 
 underMaintenance: false
 
 global:
   image:
+    tag: {{ .StateValues.image_tag }}
     pullPolicy: Always
 
 backend:
   image:
-    repository: ghcr.io/it4change/reformer.network/backend
-    tag: {{ .StateValues.image_tag }}
+    repository:  ghcr.io/{{ .StateValues.github_repository | lower }}/backend
   storage: "10Gi"
   env:
     PRODUCTION_DB_CLEAN_ALLOW: "true"
@@ -25,13 +22,11 @@ backend:
 
 webapp:
   image:
-    repository: ghcr.io/it4change/reformer.network/webapp
-    tag: {{ .StateValues.image_tag }}
+    repository: ghcr.io/{{ .StateValues.github_repository | lower }}/webapp
 
 maintenance:
   image:
-    repository: ghcr.io/it4change/reformer.network/maintenance
-    tag: {{ .StateValues.image_tag }}
+    repository: ghcr.io/{{ .StateValues.github_repository | lower }}/maintenance
 
 neo4j:
   image:

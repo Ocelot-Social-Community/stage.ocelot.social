@@ -1,3 +1,7 @@
+{{ $branded_image_tag:= env "BRANDED_IMAGE_TAG" | default (exec "../scripts/branded_image_tag.sh" (list) | trim) }}
+{{ $ocelot_image_tag := env "OCELOT_IMAGE_TAG" | default  (exec "../scripts/ocelot_image_tag.sh" (list) | trim) }}
+
 domain: reformer-network.ocelot-social.roschaefer.de
 namespace: reformer-network-production
-image_tag: {{ requiredEnv "IMAGE_TAG" }}
+image_tag: {{ env "IMAGE_TAG" | default (printf "ocelot-%s--branded-%s" $ocelot_image_tag $branded_image_tag) }}
+github_repository: it4change/reformer.network/backend
