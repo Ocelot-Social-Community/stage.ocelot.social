@@ -1,7 +1,6 @@
-{{ $branded_image_tag:= env "BRANDED_IMAGE_TAG" | default (exec "../scripts/branded_image_tag.sh" (list) | trim) }}
-{{ $ocelot_image_tag := env "OCELOT_IMAGE_TAG" | default  (exec "../scripts/ocelot_image_tag.sh" (list) | trim) }}
+{{ $image_tag := env "IMAGE_TAG" | default  (exec "../scripts/image_tag.sh" (list) | trim) }}
 
 domain: staging.ocelot-social.roschaefer.de
 namespace: ocelot-staging
-image_tag: {{ env "IMAGE_TAG" | default (printf "ocelot-%s--branded-%s" $ocelot_image_tag $branded_image_tag) }}
+image_tag: {{ $image_tag }}
 github_repository: ocelot-social-community/stage.ocelot.social
