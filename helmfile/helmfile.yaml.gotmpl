@@ -6,10 +6,18 @@ environments:
 ---
 repositories:
   - name: ocelot-social
-    url: git+https://github.com/Ocelot-Social-Community/Ocelot-Social@deployment/helm/chart?ref=hetzner
+    url: git+https://github.com/Ocelot-Social-Community/Ocelot-Social@deployment/helm/charts?ref=hetzner
 
 releases:
   - name: ocelot-social
+    namespace: {{ .StateValues.namespace }}
+    chart: ocelot-social/ocelot-social
+    values:
+    - ./values/ocelot.yaml.gotmpl
+    secrets:
+      - ./secrets/ocelot.yaml
+
+  - name: ocelot-neo4j
     namespace: {{ .StateValues.namespace }}
     chart: ocelot-social/ocelot-social
     values:
