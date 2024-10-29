@@ -61,7 +61,7 @@ jobs:
 
   deploy-to-kubernetes:
     runs-on: ubuntu-latest
-    if: ${{ github.ref == 'refs/tags/staging' }}
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
     needs: build-and-push-images
     steps:
       - uses: mdgreenwald/mozilla-sops-action@d9714e521cbaecdae64a89d2fdd576dd2aa97056 # v1.6.0
