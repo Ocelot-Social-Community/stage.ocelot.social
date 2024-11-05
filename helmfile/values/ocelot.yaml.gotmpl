@@ -15,6 +15,7 @@ backend:
     repository:  ghcr.io/{{ .StateValues.github_repository | lower }}/backend
   storage: "10Gi"
   env:
+    NEO4J_URI: "bolt://ocelot-neo4j-neo4j:7687"
     PRODUCTION_DB_CLEAN_ALLOW: "true"
     PUBLIC_REGISTRATION: "true"
     INVITE_REGISTRATION: "true"
