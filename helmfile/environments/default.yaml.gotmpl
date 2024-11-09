@@ -1,6 +1,6 @@
 {{ $image_tag := env "IMAGE_TAG" | default  (exec "../scripts/image_tag.sh" (list) | trim) }}
 
-domain: staging.ocelot-social.roschaefer.de
+domain: staging.ocelot-social.it4c.org
 namespace: ocelot-staging
 image_tag: {{ $image_tag }}
 github_repository: ocelot-social-community/stage.ocelot.social
