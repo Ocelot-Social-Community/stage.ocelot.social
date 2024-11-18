@@ -1,6 +1,6 @@
 {{ $image_tag := env "IMAGE_TAG" | default  (exec "../scripts/image_tag.sh" (list) | trim) }}
 
-domain: reformer-network.ocelot-social.it4c.org
+domain: reformer-network-staging.ocelot-social.it4c.org
 namespace: reformer-network
 image_tag: {{ $image_tag }}
 github_repository: it4change/reformer.network
