@@ -2,6 +2,6 @@
 {{ $ocelot_image_tag := env "OCELOT_IMAGE_TAG" | default  (exec "../scripts/ocelot_image_tag.sh" (list) | trim) }}
 
 domain: reformer-network.ocelot-social.it4c.org
-namespace: reformer-network-production
+namespace: reformer-network
 image_tag: {{ env "IMAGE_TAG" | default (printf "ocelot-%s--branded-%s" $ocelot_image_tag $branded_image_tag) }}
 github_repository: it4change/reformer.network
