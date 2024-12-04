@@ -1,37 +1,36 @@
 domain: {{ .StateValues.domain }}
 
 cert_manager:
-  issuer: reformer-network-letsencrypt-prod
-
-cert_manager:
   issuer: {{ .Release.Name }}-letsencrypt-prod
 
 underMaintenance: false
 
 global:
   image:
+    tag: {{ .StateValues.image_tag }}
     pullPolicy: Always
 
 backend:
   image:
-    repository: ghcr.io/it4change/reformer.network/backend
-    tag: {{ .StateValues.image_tag }}
+    repository:  ghcr.io/{{ .StateValues.github_repository | lower }}/backend
   storage: "10Gi"
   env:
-    PRODUCTION_DB_CLEAN_ALLOW: "true"
+    NEO4J_URI: "bolt://ocelot-neo4j-neo4j:7687"
     PUBLIC_REGISTRATION: "true"
     INVITE_REGISTRATION: "true"
-    CATEGORIES_ACTIVE:
+    CATEGORIES_ACTIVE: "true"
 
 webapp:
   image:
-    repository: ghcr.io/it4change/reformer.network/webapp
-    tag: {{ .StateValues.image_tag }}
+    repository: ghcr.io/{{ .StateValues.github_repository | lower }}/webapp
+  env:
+    PUBLIC_REGISTRATION: "true"
+    INVITE_REGISTRATION: "true"
+    CATEGORIES_ACTIVE: "true"
 
 maintenance:
   image:
-    repository: ghcr.io/it4change/reformer.network/maintenance
-    tag: {{ .StateValues.image_tag }}
+    repository: ghcr.io/{{ .StateValues.github_repository | lower }}/maintenance
 
 neo4j:
   image:
@@ -39,3 +38,8 @@ neo4j:
     tag: hetzner
   storage: "5Gi"
   storageBackups: "10Gi"
+  resources:
+    requests:
+      memory: "2Gi"
+    limits:
+      memory: "4Gi"
