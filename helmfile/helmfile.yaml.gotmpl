@@ -18,7 +18,7 @@ releases:
     values:
     - ./values/ocelot.yaml.gotmpl
     secrets:
-      - ./secrets/ocelot.yaml
+    - ./secrets/ocelot.yaml
 
   - name: ocelot-neo4j
     namespace: {{ .StateValues.namespace }}
@@ -26,4 +26,4 @@ releases:
     values:
     - ./values/ocelot.yaml.gotmpl
     secrets:
-      - ./secrets/ocelot.yaml
+    - ./secrets/ocelot.yaml
