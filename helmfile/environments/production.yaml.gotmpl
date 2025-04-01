@@ -3,9 +3,9 @@
 {{ $image_tag := env "IMAGE_TAG" | default  (exec "../scripts/branded_image_tag.sh" (list) | trim) }}
 {{ $image_tag := env "IMAGE_TAG" | default  (exec "../scripts/branded_image_tag.sh" (list) | trim) }}
 
-domain: reformer-network.ocelot-social-production.it4c.org
+domain: reformer.network
 redirect_domains: | # i don't understand it, but its the way to get it to work: https://stackoverflow.com/a/52840704
-    []
+    ["www.reformer.network"]
 namespace: reformer-network
 #image_tag: {{ env "IMAGE_TAG" | default (printf "ocelot-%s--branded-%s" $ocelot_image_tag $branded_image_tag) }}
 image_tag: {{ $image_tag }}
