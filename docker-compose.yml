@@ -1,6 +1,6 @@
 services:
   webapp:
-    image: ghcr.io/it4change/reformer.network/webapp
+    image: ghcr.io/IT4Change/reformer.network/webapp
     build:
       context: .
       dockerfile: ./docker/webapp.Dockerfile
@@ -18,7 +18,7 @@ services:
       - backend
 
   backend:
-    image: ghcr.io/it4change/reformer.network/backend
+    image: ghcr.io/IT4Change/reformer.network/backend
     build:
       context: .
       dockerfile: ./docker/backend.Dockerfile
@@ -38,7 +38,7 @@ services:
       - neo4j
 
   maintenance:
-    image: ghcr.io/it4change/reformer.network/maintenance
+    image: ghcr.io/IT4Change/reformer.network/maintenance
     build:
       context: .
       dockerfile: ./docker/maintenance.Dockerfile
