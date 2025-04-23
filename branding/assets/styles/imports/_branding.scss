@@ -197,3 +197,17 @@ span.category-tag.filterActive {
 div.ds-input-wrap > input:focus-within.ds-input {
   border-color: $color-primary;
 }
+// div .ds-form-item .ds-input-has-focus {
+//   border-color: $color-primary;
+// }
+// div.ds-input-has-focus {
+//   border-color: $color-primary;
+// }
+// div.ds-select:focus {
+//   border-color: $color-primary;
+// }
+
+/* checkbox */
+[type="checkbox"] {
+  accent-color: $color-primary-light;
+}
