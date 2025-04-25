@@ -27,9 +27,10 @@ if (process.env.NODE_ENV === 'production' && existsSync('./temp/metadata.json'))
 }
 
 export default defineConfig({
-  dbName: env.DB_NAME,
+  // we cannot use the config here, since this is required at build time.
+  clientUrl: env.DB_URL,
   // folder based discovery setup, using common filename suffix
-  entities: ['dist/**/*.entity.js'],
+  entities: ['build/**/*.entity.js'],
   entitiesTs: ['src/**/*.entity.ts'],
   // enable debug mode to log SQL queries and discovery information
   debug: false,

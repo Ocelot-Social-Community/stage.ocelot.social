@@ -17,15 +17,15 @@ export const schema = {
   },
   PORT: {
     type: Number,
-    default: 3000,
+    default: 4000,
   },
   DB_MIGRATE: {
     type: Boolean,
     default: true,
   },
-  DB_NAME: {
+  DB_URL: {
     type: String,
-    default: 'badge-lookup',
+    default: 'mysql://root:@localhost:3306/badge-lookup',
   },
 }
 
