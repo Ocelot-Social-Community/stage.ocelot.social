@@ -1,16 +1,26 @@
 import { FormatRegistry, Type, TypeBoxValidatorCompiler } from '@fastify/type-provider-typebox'
+import { RequestContext } from '@mikro-orm/mariadb'
 import Fastify from 'fastify'
 
+import { initORM } from './db/db'
+import { EmailBadges } from './db/EmailBadges.entity'
 import { IsSHA256 } from './formats'
 
 import type { Env } from './env'
 import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 
-function createServer(env: Env) {
+export async function createServer(env: Env) {
+  const db = await initORM(env)
+
+  if (env.DB_MIGRATE) {
+    // sync the schema
+    await db.orm.migrator.up()
+  }
+
   // Register EMail format
   FormatRegistry.Set('sha256', (value) => IsSHA256(value))
 
-  // Fatify
+  // Fastify
   const fastify = Fastify().setValidatorCompiler(TypeBoxValidatorCompiler)
 
   // Request
@@ -37,10 +47,9 @@ function createServer(env: Env) {
         return reply.status(400).send({ success: false })
       }
 
-      // request.body.hash
-      const badges = ['badge1', 'badge2', 'badge3']
+      const badges = await db.em.find(EmailBadges, { hash: request.body.hash })
 
-      return reply.status(200).send({ success: true, badges })
+      return reply.status(200).send({ success: true, badges: badges.map((badge) => badge.badge) })
     })
 
   // Submit
@@ -68,13 +77,23 @@ function createServer(env: Env) {
         return reply.status(400).send({ success: false })
       }
 
-      // request.body.hash
-      const badges = ['badge1', 'badge2', 'badge3', request.body.badge]
+      const emailBadge = new EmailBadges(request.body.hash, request.body.badge)
+      await db.em.upsert(EmailBadges, emailBadge, { onConflictAction: 'ignore' })
 
-      return reply.status(200).send({ success: true, badges })
+      const badges = await db.em.find(EmailBadges, { hash: request.body.hash })
+
+      return reply.status(200).send({ success: true, badges: badges.map((badge) => badge.badge) })
     })
+
+  // shut down the connection when closing the app
+  fastify.addHook('onClose', async () => {
+    await db.orm.close()
+  })
+
+  // register request context hook
+  fastify.addHook('onRequest', (request, reply, done) => {
+    RequestContext.create(db.em, done)
+  })
 
   return fastify
 }
-
-export { createServer }

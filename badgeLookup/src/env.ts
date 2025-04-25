@@ -19,6 +19,14 @@ export const schema = {
     type: Number,
     default: 3000,
   },
+  DB_MIGRATE: {
+    type: Boolean,
+    default: true,
+  },
+  DB_NAME: {
+    type: String,
+    default: 'badge-lookup',
+  },
 }
 
 export type Env = EnvType<typeof schema>

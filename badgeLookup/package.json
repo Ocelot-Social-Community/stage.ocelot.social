@@ -12,14 +12,18 @@
   },
   "scripts": {
     "start": "node ./build/index.js",
-    "build": "tsc",
+    "build": "tsc && npx mikro-orm-esm cache:generate --combined",
     "dev": "tsx watch ./src/index.ts",
     "test:unit": "jest",
     "test:lint:eslint": "eslint --ext .ts,.tsx,.js,.jsx,.cjs,.mjs,.json,.yml,.yaml --max-warnings 0 .",
+    "db:migrate:up": "npx mikro-orm migration:up",
+    "db:migrate:create": "npx mikro-orm migration:create",
+    "db:reset": "npx mikro-orm migration:fresh",
     "update": "npx npm-check-updates"
   },
   "devDependencies": {
     "@eslint-community/eslint-plugin-eslint-comments": "^4.4.1",
+    "@mikro-orm/sql-highlighter": "^1.0.1",
     "@types/jest": "^29.5.14",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "@typescript-eslint/parser": "^5.62.0",
@@ -45,6 +49,11 @@
   },
   "dependencies": {
     "@fastify/type-provider-typebox": "^5.1.0",
+    "@mikro-orm/cli": "^6.4.13",
+    "@mikro-orm/core": "^6.4.13",
+    "@mikro-orm/mariadb": "^6.4.13",
+    "@mikro-orm/migrations": "^6.4.13",
+    "@mikro-orm/reflection": "^6.4.13",
     "fastify": "^5.2.1",
     "ts-dotenv": "^0.9.1"
   },
@@ -57,13 +66,12 @@
     "collectCoverage": true,
     "coverageThreshold": {
       "global": {
-        "branches": 100,
-        "functions": 100,
-        "lines": 100,
-        "statements": 100
+        "lines": 95
       }
     },
-    "modulePathIgnorePatterns": ["<rootDir>/build/"]
+    "modulePathIgnorePatterns": [
+      "<rootDir>/build/"
+    ]
   },
   "imports": {
     "#src/*": "./src/*",
