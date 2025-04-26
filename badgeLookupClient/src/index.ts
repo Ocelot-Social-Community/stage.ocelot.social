@@ -1,23 +1,24 @@
 import crypto from 'node:crypto'
+import { createReadStream } from 'node:fs'
+import fs from 'node:fs/promises'
+import readline from 'node:readline/promises'
+
 import fetch from 'node-fetch'
-import { loadEnv, env } from './env'
 import isEmail from 'validator/lib/isEmail'
 import normalizeEmail from 'validator/lib/normalizeEmail'
-import readline from 'node:readline/promises'
-import fs from 'node:fs/promises'
-import {createReadStream} from 'node:fs'
-import path from 'node:path'
+
+import { loadEnv, env } from './env'
 
 loadEnv() // Executed synchronously before the rest of your app loads
 
 const query = async (email: string, badge: string) => {
-  if (!isEmail(email)) {
+  const normalizedEmail = normalizeEmail(email)
+  if (!isEmail(email) || !normalizedEmail) {
     // eslint-disable-next-line no-console
     console.log(`Error: ${email} is not an valid email`)
     return
   }
 
-  const normalizedEmail = normalizeEmail(email)
   const hash = crypto.createHash('sha256').update(normalizedEmail).digest('hex')
 
   const body = {
@@ -40,7 +41,9 @@ const query = async (email: string, badge: string) => {
   }
 
   // eslint-disable-next-line no-console
-  console.log(`Success: ${email} - registered badge ${badge} - all badges: ${data.badges}`)
+  console.log(
+    `Success: ${email} - registered badge ${badge} - all badges: ${data.badges?.join(',') ?? 'none'}`,
+  )
 }
 
 const run = async () => {
@@ -52,18 +55,29 @@ const run = async () => {
     if (filename === '.gitignore') {
       continue
     }
+    // eslint-disable-next-line no-console
+    console.log(`File: ${filename}`)
+
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    const stream = createReadStream(dataFolder + filename)
     const file = readline.createInterface({
-      input: createReadStream(dataFolder + filename),
+      input: stream,
       output: process.stdout,
       terminal: false,
     })
     const badge = filename
 
     for await (const dirtyEmail of file) {
-      const email = dirtyEmail.replace(/"/g, '')
+      const email = dirtyEmail.replace(/"/g, '').trim()
       await query(email, badge)
     }
+
+    file.close()
+    stream.close()
   }
+
+  // eslint-disable-next-line no-console
+  console.log('finished')
 }
 
 void run()
