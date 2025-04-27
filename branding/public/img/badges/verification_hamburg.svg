@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="216.69mm" height="188.38mm" version="1.1" viewBox="0 0 216.69 188.38" xmlns="http://www.w3.org/2000/svg">
+ <defs>
+  <linearGradient id="linearGradient8" x1="-230.68" x2="-711.89" y1="852.16" y2="370.95" gradientTransform="matrix(.26466 0 0 .2647 223.1 65.814)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#454644" offset="0"/>
+   <stop stop-color="#b4b4b4" offset="1"/>
+  </linearGradient>
+  <linearGradient id="linearGradient9" x1="-182.11" x2="-761.07" y1="901.46" y2="322.49" gradientTransform="matrix(.26466 0 0 .2647 223.1 65.814)" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#434442" offset="0"/>
+   <stop stop-color="#b7b7b7" stop-opacity=".90196" offset="1"/>
+  </linearGradient>
+ </defs>
+ <g transform="translate(10.054 -133.61)">
+  <path d="m53.589 149.55-45.27 78.441 44.689 77.858 90.539-0.19439 44.882-77.664-45.462-78.441zm3.0492 5.321h83.292l42.368 73.1-41.827 72.376-84.375 0.18095-41.646-72.557z" fill="url(#linearGradient8)"/>
+  <path d="m44.107 133.61-54.162 94.007 53.581 94.376 109.45-0.19439 53.664-94.182-54.245-94.007zm3.0492 5.321h102.2l51.15 88.667-50.609 88.894-103.28 0.18095-50.538-89.075z" fill="url(#linearGradient9)"/>
+ </g>
+ <path d="m62.802 119.15v-49.914h10.318v20.033h21.205v-20.033h10.284v49.914h-10.284v-21.038h-21.205v21.038zm49.278 0v-49.914h10.318v20.033h21.205v-20.033h10.284v49.914h-10.284v-21.038h-21.205v21.038z" fill="#777" stroke-width=".77791" aria-label="HH"/>
+</svg>
