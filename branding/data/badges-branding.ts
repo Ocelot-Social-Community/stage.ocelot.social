@@ -1,65 +1,67 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import Factory from '@db/factories'
+import { getNeode } from '@db/neo4j'
+
+const neode = getNeode()
 
 export const trophies = async () => {
   return {
-    trophyBeitragsblocker: await Factory.build('badge', {
+    trophyBeitragsblocker: await neode.create('badge', {
       id: 'trophy_blue_beitragsblocker',
       type: 'trophy',
       description: 'Hat bei beitragsblocker.de mitgemacht',
       icon: '/img/badges/trophy_blue_beitragsblocker.svg',
     }),
-    trophyLiberationexpress: await Factory.build('badge', {
+    trophyLiberationexpress: await neode.create('badge', {
       id: 'trophy_blue_liberationexpress',
       type: 'trophy',
       description: 'Hat bei liberation-express.com mitgemacht',
       icon: '/img/badges/trophy_blue_liberationexpress.svg',
     }),
-    trophyMasernimpfblocker: await Factory.build('badge', {
+    trophyMasernimpfblocker: await neode.create('badge', {
       id: 'trophy_blue_masernimpfblocker',
       type: 'trophy',
       description: 'Hat bei masern-impfblocker.de mitgemacht',
       icon: '/img/badges/trophy_blue_masernimpfblocker.svg',
     }),
-    trophyMaskenfreiexpress: await Factory.build('badge', {
+    trophyMaskenfreiexpress: await neode.create('badge', {
       id: 'trophy_blue_maskenfreiexpress',
       type: 'trophy',
       description: 'Hat bei maskenfrei.express mitgemacht',
       icon: '/img/badges/trophy_blue_maskenfreiexpress.svg',
     }),
-    trophyNachweisexpress: await Factory.build('badge', {
+    trophyNachweisexpress: await neode.create('badge', {
       id: 'trophy_blue_nachweisexpress',
       type: 'trophy',
       description: 'Hat bei nachweis-express.de mitgemacht',
       icon: '/img/badges/trophy_blue_nachweisexpress.svg',
     }),
-    trophyRundfunkalarm: await Factory.build('badge', {
+    trophyRundfunkalarm: await neode.create('badge', {
       id: 'trophy_blue_rundfunkalarm.svg',
       type: 'trophy',
       description: 'Hat bei rundfunkalarm.de mitgemacht',
       icon: '/img/badges/trophy_blue_rundfunkalarm.svg',
     }),
-    trophyTestexpress: await Factory.build('badge', {
+    trophyTestexpress: await neode.create('badge', {
       id: 'trophy_blue_testexpress',
       type: 'trophy',
       description: 'Hat bei test-express.de mitgemacht',
       icon: '/img/badges/trophy_blue_testexpress.svg',
     }),
-    trophyBeitragsstopper: await Factory.build('badge', {
+    trophyBeitragsstopper: await neode.create('badge', {
       id: 'trophy_blue_beitragsstopper',
       type: 'trophy',
       description: 'Hat bei beitragsstopper.de mitgemacht',
       icon: '/img/badges/trophy_blue_beitragsstopper.svg',
     }),
-    trophyFreundeDerDemokratie: await Factory.build('badge', {
+    trophyFreundeDerDemokratie: await neode.create('badge', {
       id: 'trophy_orange_freunde_der_demokratie',
       type: 'trophy',
       description: 'Hat bei freundederdemokratie.org mitgemacht',
       icon: '/img/badges/trophy_orange_freunde_der_demokratie.svg',
     }),
-    trophyRestartDemocracy: await Factory.build('badge', {
+    trophyRestartDemocracy: await neode.create('badge', {
       id: 'trophy_orange_restart_democracy',
       type: 'trophy',
       description: 'Hat bei restart-democracy.org mitgemacht',
@@ -70,97 +72,97 @@ export const trophies = async () => {
 
 export const verification = async () => {
   return {
-    verificationBadenWuerttemberg: await Factory.build('badge', {
+    verificationBadenWuerttemberg: await neode.create('badge', {
       id: 'verification_baden_wuerttemberg',
       type: 'verification',
       description: 'Kommt aus Baden-Württemberg',
       icon: '/img/badges/verification_baden_wuerttemberg.svg',
     }),
-    verificationBayern: await Factory.build('badge', {
+    verificationBayern: await neode.create('badge', {
       id: 'verification_bayern',
       type: 'verification',
       description: 'Kommt aus Bayern',
       icon: '/img/badges/verification_bayern.svg',
     }),
-    verificationBerlin: await Factory.build('badge', {
+    verificationBerlin: await neode.create('badge', {
       id: 'verification_berlin',
       type: 'verification',
       description: 'Kommt aus Berlin',
       icon: '/img/badges/verification_berlin.svg',
     }),
-    verificationBrandenburg: await Factory.build('badge', {
+    verificationBrandenburg: await neode.create('badge', {
       id: 'verification_brandenburg',
       type: 'verification',
       description: 'Kommt aus Brandenburg',
       icon: '/img/badges/verification_brandenburg.svg',
     }),
-    verificationBremen: await Factory.build('badge', {
+    verificationBremen: await neode.create('badge', {
       id: 'verification_bremen',
       type: 'verification',
       description: 'Kommt aus Bremen',
       icon: '/img/badges/verification_bremen.svg',
     }),
-    verificationHamburg: await Factory.build('badge', {
+    verificationHamburg: await neode.create('badge', {
       id: 'verification_hamburg',
       type: 'verification',
       description: 'Kommt aus Hamburg',
       icon: '/img/badges/verification_hamburg.svg',
     }),
-    verificationHessen: await Factory.build('badge', {
+    verificationHessen: await neode.create('badge', {
       id: 'verification_hessen',
       type: 'verification',
       description: 'Kommt aus Hessen',
       icon: '/img/badges/verification_hessen.svg',
     }),
-    verificationMecklenburgVorpommern: await Factory.build('badge', {
+    verificationMecklenburgVorpommern: await neode.create('badge', {
       id: 'verification_mecklenburg_vorpommern',
       type: 'verification',
       description: 'Kommt aus Mecklenburg-Vorpommern',
       icon: '/img/badges/verification_mecklenburg_vorpommern.svg',
     }),
-    verificationNiedersachsen: await Factory.build('badge', {
+    verificationNiedersachsen: await neode.create('badge', {
       id: 'verification_niedersachsen',
       type: 'verification',
       description: 'Kommt aus Niedersachsen',
       icon: '/img/badges/verification_niedersachsen.svg',
     }),
-    verificationNordrheinWestfalen: await Factory.build('badge', {
+    verificationNordrheinWestfalen: await neode.create('badge', {
       id: 'verification_nordrhein_westfalen',
       type: 'verification',
       description: 'Kommt aus Nordrhein-Westfalen',
       icon: '/img/badges/verification_nordrhein_westfalen.svg',
     }),
-    verificationRheinlandPfalz: await Factory.build('badge', {
+    verificationRheinlandPfalz: await neode.create('badge', {
       id: 'verification_rheinland_pfalz',
       type: 'verification',
       description: 'Kommt aus Rheinland-Pfalz',
       icon: '/img/badges/verification_rheinland_pfalz.svg',
     }),
-    verificationSaarland: await Factory.build('badge', {
+    verificationSaarland: await neode.create('badge', {
       id: 'verification_saarland',
       type: 'verification',
       description: 'Kommt aus dem Saarland',
       icon: '/img/badges/verification_saarland.svg',
     }),
-    verificationSachsenAnhalt: await Factory.build('badge', {
+    verificationSachsenAnhalt: await neode.create('badge', {
       id: 'verification_sachsen_anhalt',
       type: 'verification',
       description: 'Kommt aus Sachsen-Anhalt',
       icon: '/img/badges/verification_sachsen_anhalt.svg',
     }),
-    verificationSachsen: await Factory.build('badge', {
+    verificationSachsen: await neode.create('badge', {
       id: 'verification_sachsen',
       type: 'verification',
       description: 'Kommt aus Sachsen',
       icon: '/img/badges/verification_sachsen.svg',
     }),
-    verificationSchleswigHolstein: await Factory.build('badge', {
+    verificationSchleswigHolstein: await neode.create('badge', {
       id: 'verification_schleswig_holstein',
       type: 'verification',
       description: 'Kommt aus Schleswig-Holstein',
       icon: '/img/badges/verification_schleswig_holstein.svg',
     }),
-    verificationThueringen: await Factory.build('badge', {
+    verificationThueringen: await neode.create('badge', {
       id: 'verification_thueringen',
       type: 'verification',
       description: 'Kommt aus Thüringen',
