@@ -13,6 +13,10 @@ jobs:
             file: docker/webapp.Dockerfile
           - name: maintenance
             file: docker/maintenance.Dockerfile
+          - name: database
+            file: docker/database.Dockerfile
+          - name: badge-lookup
+            file: badge-lookup/Dockerfile
     runs-on: ubuntu-latest
     env:
       REGISTRY: ghcr.io

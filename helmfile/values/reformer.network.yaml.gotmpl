@@ -1,0 +1,10 @@
+global:
+  image:
+    tag: {{ .StateValues.image_tag }}
+    pullPolicy: Always
+
+database:
+  image:
+    repository: ghcr.io/it4change/reformer.network/database
+    tag: master
+  storage: "5Gi"

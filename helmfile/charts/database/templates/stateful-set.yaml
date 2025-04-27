@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name:  {{ .Release.Name }}-database
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-database
+  template:
+    metadata:
+      name: database
+      annotations:
+        backup.velero.io/backup-volumes: database-data
+      labels:
+        app: {{ .Release.Name }}-database
+    spec:
+      restartPolicy: Always
+      containers:
+      - name: container-{{ .Release.Name }}-database
+        image: "{{ .Values.database.image.repository }}:{{ .Values.database.image.tag | default (include "defaultTag" .)  }}"
+        imagePullPolicy: {{ quote .Values.global.image.pullPolicy }}
+        {{- include "resources" .Values.database.resources | indent 8 }}
+        ports:
+        - containerPort: 3306
+        envFrom:
+        - configMapRef:
+            name: {{ .Release.Name }}-database-env
+        - secretRef:
+            name: {{ .Release.Name }}-database-secret-env
+        volumeMounts:
+          - mountPath: /var/lib/mysql/
+            name: database-data
+      volumes:
+        - name: database-data
+          persistentVolumeClaim:
+            claimName: {{ .Release.Name }}-database-data

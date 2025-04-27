@@ -27,3 +27,19 @@ releases:
     - ./values/ocelot.yaml.gotmpl
     secrets:
     - ./secrets/ocelot.yaml
+
+  - name: badge-lookup
+    namespace: {{ .StateValues.namespace }}
+    chart: ./charts/badge-lookup
+    values:
+    - ./values/reformer.network.yaml.gotmpl
+    secrets:
+    - ./secrets/reformer.network.yaml
+
+  - name: database
+    namespace: {{ .StateValues.namespace }}
+    chart: ./charts/database
+    values:
+    - ./values/reformer.network.yaml.gotmpl
+    secrets:
+    - ./secrets/reformer.network.yaml
