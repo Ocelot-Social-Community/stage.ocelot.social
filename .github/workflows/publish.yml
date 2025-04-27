@@ -16,7 +16,7 @@ jobs:
           - name: database
             file: docker/database.Dockerfile
           - name: badge-lookup
-            file: badge-lookup/Dockerfile
+            file: badgeLookup/Dockerfile
     runs-on: ubuntu-latest
     env:
       REGISTRY: ghcr.io
