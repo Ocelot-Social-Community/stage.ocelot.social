@@ -159,7 +159,7 @@ export const verification = async () => {
       type: 'verification',
       description: 'Kommt aus Schleswig-Holstein',
       icon: '/img/badges/verification_schleswig_holstein.svg',
-    }),    
+    }),
     verificationThueringen: await Factory.build('badge', {
       id: 'verification_thueringen',
       type: 'verification',
