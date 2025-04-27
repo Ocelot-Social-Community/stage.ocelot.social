@@ -34,7 +34,7 @@ const assignBadges = async (email: string, context) => {
       return
     }
 
-    const badges = (await response.json()) as [string]
+    const badges = (await response.json()).badges as [string]
 
     const session = context.driver.session()
     try {
