@@ -10,7 +10,6 @@ import type { Env } from './env'
 import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 
 export async function createServer(env: Env) {
-  console.log(env)
   const db = await initORM(env)
 
   if (env.DB_MIGRATE) {
@@ -74,6 +73,7 @@ export async function createServer(env: Env) {
   fastify
     .withTypeProvider<TypeBoxTypeProvider>()
     .post('/badges/submit', { schema: schemaSubmit }, async (request, reply) => {
+      console.log(request)
       if (request.body.secret !== env.SECRET_SUBMIT) {
         return reply.status(400).send({ success: false })
       }
