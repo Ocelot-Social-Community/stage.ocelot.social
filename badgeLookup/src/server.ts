@@ -73,15 +73,19 @@ export async function createServer(env: Env) {
   fastify
     .withTypeProvider<TypeBoxTypeProvider>()
     .post('/badges/submit', { schema: schemaSubmit }, async (request, reply) => {
-      console.log(request)
+      console.log('request.body', request.body)
       if (request.body.secret !== env.SECRET_SUBMIT) {
         return reply.status(400).send({ success: false })
       }
 
+      console.log('request.body2')
       const emailBadge = new EmailBadges(request.body.hash, request.body.badge)
+      console.log('emailBadge', emailBadge)
       await db.em.upsert(EmailBadges, emailBadge, { onConflictAction: 'ignore' })
+      console.log('emailBadge2')
 
       const badges = await db.em.find(EmailBadges, { hash: request.body.hash })
+      console.log('badges', badges)
 
       return reply.status(200).send({ success: true, badges: badges.map((badge) => badge.badge) })
     })
