@@ -81,7 +81,12 @@ export async function createServer(env: Env) {
       console.log('request.body2')
       const emailBadge = new EmailBadges(request.body.hash, request.body.badge)
       console.log('emailBadge', emailBadge)
-      await db.em.upsert(EmailBadges, emailBadge, { onConflictAction: 'ignore' })
+      try {
+        await db.em.upsert(EmailBadges, emailBadge, { onConflictAction: 'ignore' })
+      } catch (e) {
+        console.log(e)
+        throw e
+      }
       console.log('emailBadge2')
 
       const badges = await db.em.find(EmailBadges, { hash: request.body.hash })
