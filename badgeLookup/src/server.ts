@@ -13,8 +13,10 @@ export async function createServer(env: Env) {
   const db = await initORM(env)
 
   if (env.DB_MIGRATE) {
-    // sync the schema
+    // migrate
     await db.orm.migrator.up()
+    // sync the schema
+    await db.orm.schema.updateSchema()
   }
 
   // Register EMail format
