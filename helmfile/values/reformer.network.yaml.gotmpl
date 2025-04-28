@@ -3,8 +3,19 @@ global:
     tag: {{ .StateValues.image_tag }}
     pullPolicy: Always
 
+badgelookup:
+  image:
+    repository: ghcr.io/it4change/reformer.network/badge-lookup
+    tag: badgeLookup
+  env:
+    DB_URL: "mysql://root:@reformernetwork-database:3306/badge-lookup"
+
 database:
   image:
     repository: ghcr.io/it4change/reformer.network/database
-    tag: master
+    tag: badgeLookup
   storage: "5Gi"
+  env:
+    MARIADB_ALLOW_EMPTY_PASSWORD: "1"
+    MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "1"
+    MARIADB_USER: "root"

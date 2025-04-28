@@ -3,4 +3,4 @@ apiVersion: v1
 metadata:
   name: {{ .Release.Name }}-badge-lookup-env
 data:
-{{ .Values.badge-lookup.env | toYaml | indent 2 }}
+{{ .Values.badgelookup.env | toYaml | indent 2 }}

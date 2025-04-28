@@ -16,9 +16,9 @@ spec:
       restartPolicy: Always
       containers:
         - name: {{ .Release.Name }}-badge-lookup
-          image: "{{ .Values.badge-lookup.image.repository }}:{{ .Values.badge-lookup.image.tag | default (include "defaultTag" .) }}"
+          image: "{{ .Values.badgelookup.image.repository }}:{{ .Values.badgelookup.image.tag | default (include "defaultTag" .) }}"
           imagePullPolicy: {{ quote .Values.global.image.pullPolicy }}
-          {{- include "resources" .Values.badge-lookup.resources | indent 10 }}
+          {{- include "resources" .Values.badgelookup.resources | indent 10 }}
           env:
           - name: DB_URL
             value: "mysql://{{ .Release.Name }}-database:3306"

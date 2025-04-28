@@ -10,6 +10,7 @@ import type { Env } from './env'
 import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox'
 
 export async function createServer(env: Env) {
+  console.log(env)
   const db = await initORM(env)
 
   if (env.DB_MIGRATE) {
