@@ -21,7 +21,7 @@ spec:
           {{- include "resources" .Values.badgelookup.resources | indent 10 }}
           env:
           - name: DB_URL
-            value: "mysql://root:@{{ .Release.Name }}-database:3306/badge-lookup"
+            value: "mysql://root:@database-database:3306/badge-lookup"
           envFrom:
           - configMapRef:
               name: {{ .Release.Name }}-badge-lookup-env
