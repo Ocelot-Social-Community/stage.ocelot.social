@@ -1,0 +1,19 @@
+global:
+  image:
+    tag: {{ .StateValues.image_tag }}
+    pullPolicy: Always
+
+badgelookup:
+  image:
+    repository: ghcr.io/it4change/reformer.network/badge-lookup
+    tag: master
+
+database:
+  image:
+    repository: ghcr.io/it4change/reformer.network/database
+    tag: master
+  storage: "5Gi"
+  env:
+    MARIADB_ALLOW_EMPTY_PASSWORD: "1"
+    MARIADB_ALLOW_EMPTY_ROOT_PASSWORD: "1"
+    MARIADB_USER: "root"

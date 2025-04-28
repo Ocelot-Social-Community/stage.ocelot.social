@@ -1,0 +1,11 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Release.Name }}-badge-lookup
+spec:
+  ports:
+    - name: {{ .Release.Name }}-badge-lookup
+      port: 4000
+      targetPort: 4000
+  selector:
+    app: {{ .Release.Name }}-badge-lookup

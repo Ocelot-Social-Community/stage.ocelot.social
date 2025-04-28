@@ -1,0 +1,3 @@
+badge-lookup:
+  image:
+    repository: ghcr.io/it4change/reformer.network/badge-lookup

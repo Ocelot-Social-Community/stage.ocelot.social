@@ -1,0 +1,32 @@
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name:  {{ .Release.Name }}-badge-lookup
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}-badge-lookup
+  template:
+    metadata:
+      annotations:
+        backup.velero.io/backup-volumes: uploads
+      labels:
+        app: {{ .Release.Name }}-badge-lookup
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: {{ .Release.Name }}-badge-lookup
+          image: "{{ .Values.badgelookup.image.repository }}:{{ .Values.badgelookup.image.tag | default (include "defaultTag" .) }}"
+          imagePullPolicy: {{ quote .Values.global.image.pullPolicy }}
+          {{- include "resources" .Values.badgelookup.resources | indent 10 }}
+          env:
+          - name: DB_URL
+            value: "mysql://root:@database-database:3306/badge-lookup"
+          envFrom:
+          - configMapRef:
+              name: {{ .Release.Name }}-badge-lookup-env
+          - secretRef:
+              name: {{ .Release.Name }}-badge-lookup-secret-env
+          ports:
+          - containerPort: 4000
+            protocol: TCP
