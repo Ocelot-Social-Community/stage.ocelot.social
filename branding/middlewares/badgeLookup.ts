@@ -62,13 +62,15 @@ const assignBadges = async (email: string, context) => {
 export default {
   Mutation: {
     login: async (resolve, root, args, context, info) => {
+      const { email } = args
       const resolved = await resolve(root, args, context, info)
-      void assignBadges(args.email, context)
+      void assignBadges(email, context)
       return resolved
     },
     SignupVerification: async (resolve, root, args, context, info) => {
+      const { email } = args
       const resolved = await resolve(root, args, context, info)
-      void assignBadges(args.email, context)
+      void assignBadges(email, context)
       return resolved
     },
   },

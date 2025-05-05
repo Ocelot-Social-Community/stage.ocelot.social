@@ -13,6 +13,7 @@ services:
       GRAPHQL_URI: http://backend:4000/
       MAPBOX_TOKEN: "pk.eyJ1IjoiYnVzZmFrdG9yIiwiYSI6ImNraDNiM3JxcDBhaWQydG1uczhpZWtpOW4ifQ.7TNRTO-o9aK1Y6MyW_Nd4g"
       BADGES_ENABLED: "true"
+      PUBLIC_REGISTRATION: 'true'
     ports:
       - 3000:3000
     depends_on:
@@ -35,6 +36,7 @@ services:
       PRIVATE_KEY_PASSPHRASE: "a7dsf78sadg87ad87sfagsadg78"
       BADGE_ATTRIBUTION_SERVICE_URL: 'http://badge-lookup:4000/badges'
       BADGE_ATTRIBUTION_SERVICE_SECRET: 'SOME-SECRET'
+      PUBLIC_REGISTRATION: 'true'
     ports:
       - 4000:4000
     depends_on:
