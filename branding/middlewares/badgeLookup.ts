@@ -7,7 +7,7 @@ import crypto from 'node:crypto'
 
 import fetch from 'node-fetch'
 
-import normalizeEmail from '@schema/resolvers/helpers/normalizeEmail'
+import normalizeEmail from '@graphql/resolvers/helpers/normalizeEmail'
 
 // config
 /* eslint-disable n/no-process-env */
