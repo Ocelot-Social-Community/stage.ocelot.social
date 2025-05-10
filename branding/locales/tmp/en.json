@@ -42,5 +42,8 @@
         "miscellaneous": "Miscellaneous"
       }
     }
+  },
+  "login": {
+    "no-account": "Access only with invitation link"
   }
 }
