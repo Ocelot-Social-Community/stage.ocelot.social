@@ -6,5 +6,41 @@
       "terms-and-conditions": "Allgemeine Geschäftsbedingungen (AGB)",
       "terms-and-conditions-short": "AGBs"
     }
+  },
+  "contribution": {
+    "category": {
+      "description": {
+        "corona": "Zeitstrahl, rechtliche Hintergründe, Studien, Maßnahmenkritik",
+        "digital-euro": "EZB-Pläne, Social-Credit-Systeme, Quellen zu EU & BIZ",
+        "who": "Internationale Gesundheitsvorschriften (IHR), WHO-Reform, Impfpflicht-Debatten",
+        "monetary-system": "Inflationsschutz, Enteignungsverfahren, historische Beispiele",
+        "basic-rights": "GG-Analyse, Meinungsferiheit, Versammlungsrecht",
+        "justice": "Politische Verfahren, Verfassungsrecht, Verteidigung gegen Repression",
+        "demonstrations": "Rechte bei Demos, Verhalten bei Polizeikontrolle, Infoblätter",
+        "child-protection": "Aufklärung zu Missbrauch, Pädokriminalität, juristische und gesellschaftliche Aufarbeitung",
+        "transhumanism": "Bioethik, KI-Kontrollgesetze, Einfluss globaler Player",
+        "surveillance": "DSGVO, Vorratsdatenspeicherung, Biometrie & Tracking",
+        "education": "Bildungssystem, Ideologie, Netzwerke, Einflussnahme",
+        "media": "Propagandatechniken, Nudging, Gruppenpsychologie",
+        "ngos": "Netzwerke wie AAS, Open Society, NetzDG, etc. — Akteure, Strukturen, Finanzierung",
+        "miscellaneous": "Sonstiges"
+      },
+      "name": {
+        "corona": "Corona-Aufarbeitung",
+        "digital-euro": "Digitaler Euro (CBDC)",
+        "who": "WHO & Pandemie-Verträge",
+        "monetary-system": "Geldsystem & Vermögensschutz",
+        "basic-rights": "Grundrechte & Demokratie",
+        "justice": "Justiz & Grundsatzurteile",
+        "demonstrations": "Demorecht & Polizei-Kontakt",
+        "child-protection": "Kinderschutz & sexualisierte Gewalt",
+        "transhumanism": "Transhumanismus & KI-Regulierung",
+        "surveillance": "Überwachung & Datenschutz",
+        "education": "Bildung & Indoktrination",
+        "media": "Psychologoe der Massen & Medienkritik",
+        "ngos": "NGOs & Machtstrukturen",
+        "miscellaneous": "Sonstiges"
+      }
+    }
   }
 }

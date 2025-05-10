@@ -6,5 +6,41 @@
       "terms-and-conditions": "Terms and Conditions",
       "terms-and-conditions-short": "Terms and Conditions"
     }
+  },
+  "contribution": {
+    "category": {
+      "description": {
+        "corona": "Timeline, legal background, studies, criticism of measures",
+        "digital-euro": "ECB Plans, Social Credit Systems, EU & BIS Sources",
+        "who": "International Health Regulations (IHR), WHO reform, compulsory vaccination debates",
+        "monetary-system": "Inflation protection, expropriation proceedings, historical examples",
+        "basic-rights": "GG (German constitution) analysis, freedom of opinion, right of assembly",
+        "justice": "Political proceedings, constitutional law, defence against repression",
+        "demonstrations": "Rights at demonstrations, behaviour during police checks, information sheets",
+        "child-protection": "Education on abuse, paedophilia, legal and social reappraisal",
+        "transhumanism": "Bioethics, AI control laws, influence of global players",
+        "surveillance": "GDPR, Data Retention, Biometrics & Tracking",
+        "education": "Education system, ideology, networks, influence",
+        "media": "Propaganda techniques, nudging, group psychology",
+        "ngos": "Networks such as AAS, Open Society, NetzDG, etc. — actors, structures, financing",
+        "miscellaneous": "Miscellaneous"
+      },
+      "name": {
+        "corona": "Corona reappraisal",
+        "digital-euro": "Digital Euro (CBDC)",
+        "who": "WHO & Pandemic Contracts",
+        "monetary-system": "Monetary System & Asset Protection",
+        "basic-rights": "Fundamental Rights & Democracy",
+        "justice": "Justice & Landmark Judgments",
+        "demonstrations": "Right to demonstrate & police contact",
+        "child-protection": "Child Protection & Sexualised Violence",
+        "transhumanism": "Transhumanism & AI Regulation",
+        "surveillance": "Monitoring & Data Protection",
+        "education": "Education & Indoctrination",
+        "media": "Psychology of the Masses & Media Criticism",
+        "ngos": "NGOs & Power Structures",
+        "miscellaneous": "Miscellaneous"
+      }
+    }
   }
 }
