@@ -18,7 +18,7 @@ backend:
   env:
     NEO4J_URI: "bolt://ocelot-neo4j-neo4j:7687"
     # PRODUCTION_DB_CLEAN_ALLOW: "true"
-    PUBLIC_REGISTRATION: "true"
+    PUBLIC_REGISTRATION: "false"
     INVITE_REGISTRATION: "true"
     CATEGORIES_ACTIVE: "true"
     BADGE_ATTRIBUTION_SERVICE_URL: "http://badge-lookup-badge-lookup:4000/badges"
@@ -27,7 +27,7 @@ webapp:
   image:
     repository: ghcr.io/{{ .StateValues.github_repository | lower }}/webapp
   env:
-    PUBLIC_REGISTRATION: "true"
+    PUBLIC_REGISTRATION: "false"
     INVITE_REGISTRATION: "true"
     CATEGORIES_ACTIVE: "true"
     BADGES_ENABLED: "true"
