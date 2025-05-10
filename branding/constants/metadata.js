@@ -2,7 +2,7 @@
 export default {
   APPLICATION_NAME: 'Reformer.network',
   APPLICATION_SHORT_NAME: 'Reformer.network',
-  APPLICATION_DESCRIPTION: 'Reformer.network, social network',
+  APPLICATION_DESCRIPTION: 'Reformer.network',
   COOKIE_NAME: 'reformer-network-token',
   ORGANIZATION_NAME: 'Stichting Rudulin',
   ORGANIZATION_JURISDICTION: 'Amsterdam',
