@@ -5,3 +5,4 @@
 .env
 /temp
 /data-*
+/production-*.log
