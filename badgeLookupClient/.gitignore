@@ -4,3 +4,4 @@
 /coverage
 .env
 /temp
+/data-*
