@@ -7,7 +7,14 @@ import crypto from 'node:crypto'
 
 import fetch from 'node-fetch'
 
+// eslint-disable-next-line import/no-cycle
+import badgesResolver from '@graphql/resolvers/badges'
 import normalizeEmail from '@graphql/resolvers/helpers/normalizeEmail'
+import { Context } from '@src/server'
+
+const {
+  Mutation: { rewardTrophyBadge },
+} = badgesResolver
 
 // config
 /* eslint-disable n/no-process-env */
@@ -15,10 +22,13 @@ const BADGE_ATTRIBUTION_SERVICE_URL = process.env.BADGE_ATTRIBUTION_SERVICE_URL 
 const BADGE_ATTRIBUTION_SERVICE_SECRET = process.env.BADGE_ATTRIBUTION_SERVICE_SECRET ?? ''
 /* eslint-enable n/no-process-env */
 
-const assignBadges = async (email: string, context) => {
+const assignBadges = async (email: string, context: Context) => {
   if (!BADGE_ATTRIBUTION_SERVICE_URL) {
     return
   }
+
+  // We need the user for the resolver call. We attribute the badge as user: 0
+  context.user = { id: 0 }
 
   const normalizedEmail = normalizeEmail(email)
   const hash = crypto.createHash('sha256').update(normalizedEmail).digest('hex')
@@ -36,22 +46,28 @@ const assignBadges = async (email: string, context) => {
 
     const badges = (await response.json()).badges as [string]
 
-    const session = context.driver.session()
-    try {
-      await session.writeTransaction((transaction) => {
-        return transaction.run(
-          `
-            MATCH(u:User)-[:PRIMARY_EMAIL]->(e:EmailAddress {email: $email})
-            MATCH(b:Badge)
-            WHERE ANY (badgeId IN b.id WHERE badgeId IN $badges)
-            MERGE (u)<-[:REWARDED]-(b)
-          `,
-          { email: normalizedEmail, badges },
-        )
+    const users = (
+      await context.database.query({
+        query: `
+      MATCH(user:User)-[:PRIMARY_EMAIL]->(e:EmailAddress {email: $email})
+      RETURN user {.*}
+      `,
+        variables: {
+          email: normalizedEmail,
+        },
       })
-    } finally {
-      session.close()
+    ).records.map((record) => record.get('user'))
+
+    if (users.length !== 1) {
+      return
     }
+
+    const user = users[0]
+
+    for await (const badgeId of badges) {
+      await rewardTrophyBadge(null, { badgeId, userId: user.id }, context, null)
+    }
+
     // eslint-disable-next-line no-catch-all/no-catch-all
   } catch (error) {
     // eslint-disable-next-line no-console
@@ -61,13 +77,13 @@ const assignBadges = async (email: string, context) => {
 
 export default {
   Mutation: {
-    login: async (resolve, root, args, context, info) => {
+    login: async (resolve, root, args, context: Context, info) => {
       const { email } = args
       const resolved = await resolve(root, args, context, info)
       void assignBadges(email, context)
       return resolved
     },
-    SignupVerification: async (resolve, root, args, context, info) => {
+    SignupVerification: async (resolve, root, args, context: Context, info) => {
       const { email } = args
       const resolved = await resolve(root, args, context, info)
       void assignBadges(email, context)
