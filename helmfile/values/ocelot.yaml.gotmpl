@@ -1,0 +1,40 @@
+domain: {{ .StateValues.domain }}
+
+cert_manager:
+  issuer: {{ .Release.Name }}-letsencrypt-prod
+
+underMaintenance: false
+
+global:
+  image:
+    tag: {{ .StateValues.image_tag }}
+    pullPolicy: Always
+
+backend:
+  image:
+    repository:  ghcr.io/{{ .StateValues.github_repository | lower }}/backend
+  storage: "10Gi"
+  env:
+    NEO4J_URI: "bolt://ocelot-neo4j-neo4j:7687"
+    PUBLIC_REGISTRATION: "true"
+    INVITE_REGISTRATION: "true"
+    CATEGORIES_ACTIVE: "true"
+
+webapp:
+  image:
+    repository: ghcr.io/{{ .StateValues.github_repository | lower }}/webapp
+  env:
+    PUBLIC_REGISTRATION: "true"
+    INVITE_REGISTRATION: "true"
+    CATEGORIES_ACTIVE: "true"
+
+maintenance:
+  image:
+    repository: ghcr.io/{{ .StateValues.github_repository | lower }}/maintenance
+
+neo4j:
+  image:
+    repository: ghcr.io/ocelot-social-community/ocelot-social/neo4j
+    tag: hetzner
+  storage: "5Gi"
+  storageBackups: "10Gi"

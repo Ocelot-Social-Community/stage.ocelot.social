@@ -1,267 +1,87 @@
 name: publish
-on:
-  repository_dispatch:
-    types: [trigger-ocelot-build-success]
-  push:
-    branches:
-      - master
+
+on: push
 
 jobs:
-  build_branded:
-    name: Docker Build Branded
+  build-and-push-images:
+    strategy:
+      matrix:
+        app:
+          - name: backend
+            file: docker/backend.Dockerfile
+          - name: webapp
+            file: docker/webapp.Dockerfile
+          - name: maintenance
+            file: docker/maintenance.Dockerfile
     runs-on: ubuntu-latest
     env:
-      SECRET: ${{ secrets.SECRET }}
-      CONFIGURATION: "this"
-      GITHUB_OCELOT_REF_JUST_BUILT: ${{ github.event.client_payload.ref }}
-      OCELOT_GITHUB_RUN_NUMBER: ${{ github.event.client_payload.GITHUB_RUN_NUMBER }}
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}/${{ matrix.app.name }}
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Decrypt .env
-        run: gpg --quiet --batch --yes --decrypt --passphrase="${{ env.SECRET }}" --output .env .env.enc
-      - name: Load .env
-        uses: aarcangeli/load-dotenv@v1.0.0
+      - name: Checkout repository
+        uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.1.7
+      - name: Log in to the Container registry
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567
         with:
-          quiet: true
-      - name: Set GITHUB_OCELOT_REF
-        run: |
-          if [ -z ${GITHUB_OCELOT_REF} ]; then
-            echo "GITHUB_OCELOT_REF=${GITHUB_OCELOT_REF_JUST_BUILT}" >> $GITHUB_ENV
-          fi
-        shell: bash
-      - name: Set DOCKERHUB_ORGANISATION
-        run: |
-          if [ -z ${DOCKERHUB_ORGANISATION} ]; then
-            echo "DOCKERHUB_ORGANISATION=ocelotsocialnetwork" >> $GITHUB_ENV
-          fi
-      - name: Checkout Ocelot code
-        uses: actions/checkout@v3
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Read $OCELOT_VERSION from file
+        run: cat .env >> $GITHUB_ENV
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@70b2cdc6480c1a8b86edf1777157f8f437de2166
         with:
-          repository: 'Ocelot-Social-Community/Ocelot-Social'
-          ref: ${{ env.GITHUB_OCELOT_REF }}
-          path: 'ocelot/'
-          fetch-depth: 0
-      - name: Set OCELOT_GITHUB_RUN_NUMBER
-        run: |
-          if [ -z ${OCELOT_GITHUB_RUN_NUMBER} ]; then
-            echo "OCELOT_GITHUB_RUN_NUMBER=${GITHUB_OCELOT_REF}" >> $GITHUB_ENV
-          fi
-          if [ -z ${OCELOT_GITHUB_RUN_NUMBER} ]; then
-            echo "OCELOT_GITHUB_RUN_NUMBER=master" >> $GITHUB_ENV
-          fi
-        shell: bash
-      - name: Checkout Branded Repo code
-        uses: actions/checkout@v3
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          tags: |
+            type=schedule
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha
+          labels: |
+            ocelot-version=${{ env.OCELOT_VERSION }}
+      - name: Build and push Docker images
+        id: push
+        uses: docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75
         with:
-          ref: 'master'
-          path: "ocelot/deployment/configurations/${{ env.CONFIGURATION }}"
-          fetch-depth: 0
-      - name: Build branded images
-        run: |
-          ocelot/deployment/scripts/branded-images.build.sh
-          docker save "${DOCKERHUB_ORGANISATION}/backend-${DOCKERHUB_BRAND_VARRIANT}" > /tmp/backend-branded.tar
-          docker save "${DOCKERHUB_ORGANISATION}/webapp-${DOCKERHUB_BRAND_VARRIANT}" > /tmp/webapp-branded.tar
-          docker save "${DOCKERHUB_ORGANISATION}/maintenance-${DOCKERHUB_BRAND_VARRIANT}" > /tmp/maintenance-branded.tar
+          file:  ${{ matrix.app.file }}
+          context: .
+          push: true
+          build-args: |
+              OCELOT_VERSION=${{ env.OCELOT_VERSION }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
 
-      - name: Upload Artifact (Backend)
-        uses: actions/upload-artifact@v2
-        with:
-          name: docker-backend-branded
-          path: /tmp/backend-branded.tar
-
-      - name: Upload Artifact (Webapp)
-        uses: actions/upload-artifact@v2
-        with:
-          name: docker-webapp-branded
-          path: /tmp/webapp-branded.tar
-
-      - name: Upload Artifact (Maintenance)
-        uses: actions/upload-artifact@v2
-        with:
-          name: docker-maintenance-branded
-          path: /tmp/maintenance-branded.tar
-
-  upload_to_dockerhub:
-    name: Upload to Dockerhub
+  deploy-to-kubernetes:
     runs-on: ubuntu-latest
-    needs: [build_branded]
-    env:
-      SECRET: ${{ secrets.SECRET }}
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      GITHUB_OCELOT_REF_JUST_BUILT: ${{ github.event.client_payload.ref }}
+    if: ${{ startsWith(github.ref, 'refs/tags/') }}
+    needs: build-and-push-images
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Decrypt .env
-        run: gpg --quiet --batch --yes --decrypt --passphrase="${{ env.SECRET }}" --output .env .env.enc
-      - name: Load .env
-        uses: aarcangeli/load-dotenv@v1.0.0
-        with:
-          quiet: true
-      - name: Set GITHUB_OCELOT_REF
-        run: |
-          if [ -z ${GITHUB_OCELOT_REF} ]; then
-            echo "GITHUB_OCELOT_REF=${GITHUB_OCELOT_REF_JUST_BUILT}" >> $GITHUB_ENV
-          fi
-        shell: bash
-      - name: Checkout Ocelot code
-        uses: actions/checkout@v3
-        with:
-          repository: 'Ocelot-Social-Community/Ocelot-Social'
-          ref: ${{ env.GITHUB_OCELOT_REF }}
-          path: 'ocelot/'
-          fetch-depth: 0
-
-      - name: Download Docker Image (Backend)
-        uses: actions/download-artifact@v2
-        with:
-          name: docker-backend-branded
-          path: /tmp
-      - name: Load Docker Image
-        run: docker load < /tmp/backend-branded.tar
-
-      - name: Download Docker Image (Webapp)
-        uses: actions/download-artifact@v2
-        with:
-          name: docker-webapp-branded
-          path: /tmp
-      - name: Load Docker Image
-        run: docker load < /tmp/webapp-branded.tar
-
-      - name: Download Docker Image (Maintenance)
-        uses: actions/download-artifact@v2
-        with:
-          name: docker-maintenance-branded
-          path: /tmp
-      - name: Load Docker Image
-        run: docker load < /tmp/maintenance-branded.tar
-
-      - name: Upload to dockerhub
-        run: ocelot/deployment/scripts/branded-images.upload.sh
-
-  github_tag:
-    name: Tag latest version on Github
-    runs-on: ubuntu-latest
-    needs: [upload_to_dockerhub]
-    env:
-      SECRET: ${{ secrets.SECRET }}
-      GITHUB_OCELOT_REF_JUST_BUILT: ${{ github.event.client_payload.ref }}
-      OCELOT_GITHUB_RUN_NUMBER: ${{ github.event.client_payload.GITHUB_RUN_NUMBER }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Decrypt .env
-        run: gpg --quiet --batch --yes --decrypt --passphrase="${{ env.SECRET }}" --output .env .env.enc
-      - name: Load .env
-        uses: aarcangeli/load-dotenv@v1.0.0
-        with:
-          quiet: true
-      - name: Set GITHUB_OCELOT_REF
-        run: |
-          if [ -z ${GITHUB_OCELOT_REF} ]; then
-            echo "GITHUB_OCELOT_REF=${GITHUB_OCELOT_REF_JUST_BUILT}" >> $GITHUB_ENV
-          fi
-        shell: bash
-      - name: Checkout Ocelot code
-        uses: actions/checkout@v3
-        with:
-          repository: 'Ocelot-Social-Community/Ocelot-Social'
-          ref: ${{ env.GITHUB_OCELOT_REF }}
-          path: 'ocelot/'
-          fetch-depth: 0
-      - name: Set OCELOT_GITHUB_RUN_NUMBER
-        run: |
-          if [ -z ${OCELOT_GITHUB_RUN_NUMBER} ]; then
-            echo "OCELOT_GITHUB_RUN_NUMBER=${GITHUB_OCELOT_REF}" >> $GITHUB_ENV
-          fi
-          if [ -z ${OCELOT_GITHUB_RUN_NUMBER} ]; then
-            echo "OCELOT_GITHUB_RUN_NUMBER=master" >> $GITHUB_ENV
-          fi
-        shell: bash
-      - name: Setup env
-        run: |
-          echo "OCELOT_VERSION=$(node -p -e "require('./ocelot/package.json').version")" >> $GITHUB_ENV
-          echo "BRANDED_VERSION=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
-          echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
-          echo "BUILD_COMMIT=${GITHUB_SHA}" >> $GITHUB_ENV
-      - run: echo "BUILD_VERSION=${BRANDED_VERSION}-ocelot.social${OCELOT_VERSION}-${OCELOT_GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
-      - name: package-version-to-git-tag + build number
-        uses: pkgdeps/git-tag-action@v2
-        with:
-          github_token: ${{ github.token }} #${{ secrets.GITHUB_TOKEN }}
-          github_repo: ${{ github.repository }}
-          version: ${{ env.BUILD_VERSION }}
-          git_commit_sha: ${{ github.sha }}
-          git_tag_prefix: "b"
-      #- name: Generate changelog
-      #  run: |
-      #    yarn install
-      #    yarn auto-changelog --latest-version ${{ env.VERSION }} --unreleased-only
-      - name: package-version-to-git-release
-        continue-on-error: true # Will fail if tag exists
-        id: create_release
-        uses: actions/create-release@v1
+      - uses: mdgreenwald/mozilla-sops-action@d9714e521cbaecdae64a89d2fdd576dd2aa97056 # v1.6.0
+      - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.1.7
+      - run: |
+          mkdir -p ~/.config/sops/age
+          echo $SOPS_KEY | base64 --decode > ~/.config/sops/age/keys.txt
         env:
-          GITHUB_TOKEN: ${{ github.token }} #${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          SOPS_KEY: ${{ secrets.SOPS_KEY }}
+      - run: |
+          mkdir -p ~/.kube
+          sops decrypt ./helmfile/secrets/kubeconfig > ~/.kube/config
+          chmod 600 ~/.kube/config
+      - uses: helmfile/helmfile-action@80fbb6408b98822310f94d8d1321a2cacf87f78f #v1.9.2
         with:
-          tag_name: ${{ env.BUILD_VERSION }}
-          release_name: ${{ env.BUILD_VERSION }}
-          #body_path: ./CHANGELOG.md
-          draft: false
-          prerelease: false
-
-# TODO correct version
-  build_trigger:
-    name: Trigger successful brand build
-    runs-on: ubuntu-latest
-    needs: [github_tag]
-    env:
-      SECRET: ${{ secrets.SECRET }}
-      GITHUB_OCELOT_REF_JUST_BUILT: ${{ github.event.client_payload.ref }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Decrypt .env
-        run: gpg --quiet --batch --yes --decrypt --passphrase="${{ env.SECRET }}" --output .env .env.enc
-      - name: Load .env
-        uses: aarcangeli/load-dotenv@v1.0.0
-        with:
-          quiet: true
-      - name: Set GITHUB_OCELOT_REF
-        run: |
-          if [ -z ${GITHUB_OCELOT_REF} ]; then
-            echo "GITHUB_OCELOT_REF=${GITHUB_OCELOT_REF_JUST_BUILT}" >> $GITHUB_ENV
-          fi
-        shell: bash
-      - name: Checkout Ocelot code
-        uses: actions/checkout@v3
-        with:
-          repository: 'Ocelot-Social-Community/Ocelot-Social'
-          ref: ${{ env.GITHUB_OCELOT_REF }}
-          path: 'ocelot/'
-          fetch-depth: 0
-      - name: Set OCELOT_GITHUB_RUN_NUMBER
-        run: |
-          if [ -z ${OCELOT_GITHUB_RUN_NUMBER} ]; then
-            echo "OCELOT_GITHUB_RUN_NUMBER=${GITHUB_OCELOT_REF}" >> $GITHUB_ENV
-          fi
-          if [ -z ${OCELOT_GITHUB_RUN_NUMBER} ]; then
-            echo "OCELOT_GITHUB_RUN_NUMBER=master" >> $GITHUB_ENV
-          fi
-        shell: bash
-      - name: Setup env
-        run: |
-          echo "OCELOT_VERSION=$(node -p -e "require('./ocelot/package.json').version")" >> $GITHUB_ENV
-          echo "BRANDED_VERSION=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
-          echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
-          echo "BUILD_COMMIT=${GITHUB_SHA}" >> $GITHUB_ENV
-      - run: echo "BUILD_VERSION=${BRANDED_VERSION}-ocelot.social${OCELOT_VERSION}-${OCELOT_GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
-      - name: Repository Dispatch
-        uses: peter-evans/repository-dispatch@v2
-        with:
-          token: ${{ github.token }}
-          event-type: trigger-ocelot-brand-build-success
-          repository: ${{ github.repository }}
-          client-payload: '{"ref": "${{ github.ref }}", "sha": "${{ github.sha }}", "ref_ocelot": "${{ github.event.client_payload.ref }}", "sha_ocelot": "${{ github.event.client_payload.sha }}", "OCELOT_VERSION": "${{ env.OCELOT_VERSION }}", "BRANDED_VERSION": "${{ env.BRANDED_VERSION }}", "BUILD_DATE": "${{ env.BUILD_DATE }}", "BUILD_COMMIT": "${{ env.BUILD_COMMIT }}", "BUILD_VERSION": "${{ env.BUILD_VERSION }}"}'
+          helmfile-args: apply
+          helmfile-workdirectory: ./helmfile
+          helm-plugins: >
+            https://github.com/databus23/helm-diff,
+            https://github.com/jkroepke/helm-secrets,
+            https://github.com/aslafy-z/helm-git

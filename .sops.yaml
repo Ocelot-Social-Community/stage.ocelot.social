@@ -1,0 +1,15 @@
+creation_rules:
+  - age:  >-
+      age1al36hkk8can83zpxq8qyy07gpv83hdw9vchfly5f264kanz405as283a00,
+      age1llp6k66265q3rzqemxpnq0x3562u20989vcjf65fl9s3hjhgcscq6mhnjw,
+      age1zycwtk6dkxj6vuqhj9jw7932ythky9p3att6df4z9qasyw8v5dxquejcmp,
+      age15arcg8x6ltnsacwalvny0h2d4d4wkdmax328mw3v5vda9zm97uqshtavmr,
+      age1khw2eps099audp3uu5s9rk07qznllh5c8a43gv5dtpnq2a7lue6qrehn5s,
+      age1f6mzqe0cejajzt0c7nwdjz4xvs4hjct9d8hrgj60e7unzyfd7prsn0npe5
+
+# age1al36hkk8can83zpxq8qyy07gpv83hdw9vchfly5f264kanz405as283a00 SOPS_KEY github secret
+# age1llp6k66265q3rzqemxpnq0x3562u20989vcjf65fl9s3hjhgcscq6mhnjw @roschaefer
+# age1zycwtk6dkxj6vuqhj9jw7932ythky9p3att6df4z9qasyw8v5dxquejcmp @mahula
+# age15arcg8x6ltnsacwalvny0h2d4d4wkdmax328mw3v5vda9zm97uqshtavmr @Elweyn
+# age1khw2eps099audp3uu5s9rk07qznllh5c8a43gv5dtpnq2a7lue6qrehn5s @ulfgebhardt
+# age1f6mzqe0cejajzt0c7nwdjz4xvs4hjct9d8hrgj60e7unzyfd7prsn0npe5 @Tirokk
