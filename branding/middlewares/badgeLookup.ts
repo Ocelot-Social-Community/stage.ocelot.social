@@ -27,8 +27,6 @@ const assignBadges = async (email: string, context: Context) => {
     return
   }
 
-  const oldUser = context.user
-
   // We need the user for the resolver call. We attribute the badge as user: 0
   context.user = { id: 0 }
 
@@ -74,8 +72,6 @@ const assignBadges = async (email: string, context: Context) => {
   } catch (error) {
     // eslint-disable-next-line no-console
     console.log(error)
-  } finally {
-    context.user = oldUser
   }
 }
 
