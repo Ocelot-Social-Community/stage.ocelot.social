@@ -12,6 +12,8 @@ import badgesResolver from '@graphql/resolvers/badges'
 import normalizeEmail from '@graphql/resolvers/helpers/normalizeEmail'
 import { Context } from '@src/server'
 
+import { assignVerificationBadge } from './locationVerification'
+
 const {
   Mutation: { rewardTrophyBadge },
 } = badgesResolver
@@ -86,6 +88,9 @@ export default {
     SignupVerification: async (resolve, root, args, context: Context, info) => {
       const { email } = args
       const resolved = await resolve(root, args, context, info)
+      if (resolved.id && resolved.locationName) {
+        void assignVerificationBadge(resolved.id, root, context, info)
+      }
       void assignBadges(email, context)
       return resolved
     },
