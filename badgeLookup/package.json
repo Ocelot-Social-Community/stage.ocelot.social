@@ -19,6 +19,7 @@
     "db:migrate:up": "npx mikro-orm migration:up",
     "db:migrate:create": "npx mikro-orm migration:create",
     "db:reset": "npx mikro-orm migration:fresh",
+    "local:import-emails-plain": "tsx watch ./src/cli/import-emails-plain.ts",
     "update": "npx npm-check-updates"
   },
   "devDependencies": {
@@ -45,7 +46,8 @@
     "ts-jest": "^29.2.6",
     "tsc-alias": "^1.8.15",
     "tsx": "^4.19.3",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "validator": "^13.15.15"
   },
   "dependencies": {
     "@fastify/type-provider-typebox": "^5.1.0",

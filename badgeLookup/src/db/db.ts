@@ -2,6 +2,7 @@ import { MikroORM } from '@mikro-orm/mariadb'
 
 import config from '#root/mikro-orm.config'
 
+import { Email } from './Email.entity'
 import { EmailBadges } from './EmailBadges.entity'
 
 import type { Env } from '#src/env.js'
@@ -11,6 +12,7 @@ export interface Services {
   orm: MikroORM
   em: EntityManager
   EmailBadges: EntityRepository<EmailBadges>
+  Email: EntityRepository<Email>
 }
 
 let cache: Services
@@ -32,5 +34,6 @@ export async function initORM(env: Env, options?: Options): Promise<Services> {
     orm,
     em: orm.em,
     EmailBadges: orm.em.getRepository(EmailBadges),
+    Email: orm.em.getRepository(Email),
   })
 }
