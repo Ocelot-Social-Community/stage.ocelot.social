@@ -1,6 +1,7 @@
-{{ $image_tag := env "IMAGE_TAG" | default  (exec "../scripts/image_tag.sh" (list) | trim) }}
+{{ $image_tag := env "IMAGE_TAG" | default  (exec "../scripts/branded_image_tag.sh" (list) | trim) }}
 
 domain: stage.ocelot.social
+redirect_domains: []
 namespace: ocelot-staging
 image_tag: {{ $image_tag }}
 github_repository: ocelot-social-community/stage.ocelot.social
