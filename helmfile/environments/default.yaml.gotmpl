@@ -1,7 +1,21 @@
 {{ $image_tag := env "IMAGE_TAG" | default  (exec "../scripts/branded_image_tag.sh" (list) | trim) }}
 
-domain: stage.ocelot.social
-redirect_domains: []
-namespace: ocelot-staging
-image_tag: {{ $image_tag }}
-github_repository: ocelot-social-community/stage.ocelot.social
+deploy:
+    GITHUB_REPOSITORY: ocelot-social-community/stage.ocelot.social
+    IMAGE_TAG: {{ $image_tag }}
+    DOMAIN: stage.ocelot.social
+    REDIRECT_DOMAINS: []
+    NAMESPACE: ocelot-staging
+    RELEASE_NAME_OCELOT: ocelot-social
+
+ocelot:
+    options:
+        PRODUCTION_DB_CLEAN_ALLOW: "false"
+        PUBLIC_REGISTRATION: "true"
+        INVITE_REGISTRATION: "true"
+        CATEGORIES_ACTIVE: "true"
+        MAX_PINNED_POSTS: "1"
+        BADGES_ENABLED: "true"
+        NETWORK_NAME: "stage.ocelot.social"
+        ASK_FOR_REAL_NAME: "false"
+        REQUIRE_LOCATION: "false"
