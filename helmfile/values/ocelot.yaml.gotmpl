@@ -43,7 +43,7 @@ neo4j:
   image:
     repository: ghcr.io/ocelot-social-community/ocelot-social/neo4j
     tag: master
-  storage: "5Gi"
+  storage: {{ .StateValues.deploy.NEO4J_STORAGE | quote }}
   storageBackups: "10Gi"
   resources:
     requests:
