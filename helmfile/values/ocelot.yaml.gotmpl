@@ -22,6 +22,7 @@ backend:
     INVITE_REGISTRATION: {{ .StateValues.ocelot.options.INVITE_REGISTRATION | quote }}
     CATEGORIES_ACTIVE: {{ .StateValues.ocelot.options.CATEGORIES_ACTIVE | quote }}
     MAX_PINNED_POSTS: {{ .StateValues.ocelot.options.MAX_PINNED_POSTS | quote }}
+    MAX_GROUP_PINNED_POSTS: {{ .StateValues.ocelot.options.MAX_GROUP_PINNED_POSTS | quote }}
 
 webapp:
   image:
@@ -34,6 +35,7 @@ webapp:
     NETWORK_NAME: {{ .StateValues.ocelot.options.NETWORK_NAME | quote }}
     ASK_FOR_REAL_NAME: {{ .StateValues.ocelot.options.ASK_FOR_REAL_NAME | quote }}
     REQUIRE_LOCATION: {{ .StateValues.ocelot.options.REQUIRE_LOCATION | quote }}
+    MAX_GROUP_PINNED_POSTS: {{ .StateValues.ocelot.options.MAX_GROUP_PINNED_POSTS | quote }}
 
 maintenance:
   image:
