@@ -23,6 +23,8 @@ backend:
     CATEGORIES_ACTIVE: {{ .StateValues.ocelot.options.CATEGORIES_ACTIVE | quote }}
     MAX_PINNED_POSTS: {{ .StateValues.ocelot.options.MAX_PINNED_POSTS | quote }}
     MAX_GROUP_PINNED_POSTS: {{ .StateValues.ocelot.options.MAX_GROUP_PINNED_POSTS | quote }}
+    API_KEYS_ENABLED: {{ .StateValues.ocelot.options.API_KEYS_ENABLED | quote }}
+    API_KEYS_MAX_PER_USER: {{ .StateValues.ocelot.options.API_KEYS_MAX_PER_USER | quote }}
 
 webapp:
   image:
@@ -36,6 +38,8 @@ webapp:
     ASK_FOR_REAL_NAME: {{ .StateValues.ocelot.options.ASK_FOR_REAL_NAME | quote }}
     REQUIRE_LOCATION: {{ .StateValues.ocelot.options.REQUIRE_LOCATION | quote }}
     MAX_GROUP_PINNED_POSTS: {{ .StateValues.ocelot.options.MAX_GROUP_PINNED_POSTS | quote }}
+    API_KEYS_ENABLED: {{ .StateValues.ocelot.options.API_KEYS_ENABLED | quote }}
+    API_KEYS_MAX_PER_USER: {{ .StateValues.ocelot.options.API_KEYS_MAX_PER_USER | quote }}
 
 maintenance:
   image:
