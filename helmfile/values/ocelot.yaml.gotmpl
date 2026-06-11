@@ -20,6 +20,7 @@ backend:
     PRODUCTION_DB_CLEAN_ALLOW: {{ .StateValues.ocelot.options.PRODUCTION_DB_CLEAN_ALLOW | quote }}
     PUBLIC_REGISTRATION: {{ .StateValues.ocelot.options.PUBLIC_REGISTRATION | quote }}
     INVITE_REGISTRATION: {{ .StateValues.ocelot.options.INVITE_REGISTRATION | quote }}
+    BADGES_ENABLED: {{ .StateValues.ocelot.options.BADGES_ENABLED | quote }}
     CATEGORIES_ACTIVE: {{ .StateValues.ocelot.options.CATEGORIES_ACTIVE | quote }}
     MAX_PINNED_POSTS: {{ .StateValues.ocelot.options.MAX_PINNED_POSTS | quote }}
     MAX_GROUP_PINNED_POSTS: {{ .StateValues.ocelot.options.MAX_GROUP_PINNED_POSTS | quote }}
@@ -28,6 +29,8 @@ backend:
     SHOW_CONTENT_FILTER_HEADER_MENU: {{ .StateValues.ocelot.options.SHOW_CONTENT_FILTER_HEADER_MENU | quote }}
     SHOW_CONTENT_FILTER_MASONRY_GRID: {{ .StateValues.ocelot.options.SHOW_CONTENT_FILTER_MASONRY_GRID | quote }}
     SHOW_GROUP_BUTTON_IN_HEADER: {{ .StateValues.ocelot.options.SHOW_GROUP_BUTTON_IN_HEADER | quote }}
+    ASK_FOR_REAL_NAME: {{ .StateValues.ocelot.options.ASK_FOR_REAL_NAME | quote }}
+    REQUIRE_LOCATION: {{ .StateValues.ocelot.options.REQUIRE_LOCATION | quote }}
 
 webapp:
   image:
