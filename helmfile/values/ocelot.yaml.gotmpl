@@ -25,21 +25,15 @@ backend:
     MAX_GROUP_PINNED_POSTS: {{ .StateValues.ocelot.options.MAX_GROUP_PINNED_POSTS | quote }}
     API_KEYS_ENABLED: {{ .StateValues.ocelot.options.API_KEYS_ENABLED | quote }}
     API_KEYS_MAX_PER_USER: {{ .StateValues.ocelot.options.API_KEYS_MAX_PER_USER | quote }}
+    SHOW_CONTENT_FILTER_HEADER_MENU: {{ .StateValues.ocelot.options.SHOW_CONTENT_FILTER_HEADER_MENU | quote }}
+    SHOW_CONTENT_FILTER_MASONRY_GRID: {{ .StateValues.ocelot.options.SHOW_CONTENT_FILTER_MASONRY_GRID | quote }}
+    SHOW_GROUP_BUTTON_IN_HEADER: {{ .StateValues.ocelot.options.SHOW_GROUP_BUTTON_IN_HEADER | quote }}
 
 webapp:
   image:
     repository: ghcr.io/{{ .StateValues.deploy.GITHUB_REPOSITORY | lower }}/webapp
   env:
-    PUBLIC_REGISTRATION: {{ .StateValues.ocelot.options.PUBLIC_REGISTRATION | quote }}
-    INVITE_REGISTRATION: {{ .StateValues.ocelot.options.INVITE_REGISTRATION | quote }}
-    CATEGORIES_ACTIVE: {{ .StateValues.ocelot.options.CATEGORIES_ACTIVE | quote }}
-    BADGES_ENABLED: {{ .StateValues.ocelot.options.BADGES_ENABLED | quote }}
     NETWORK_NAME: {{ .StateValues.ocelot.options.NETWORK_NAME | quote }}
-    ASK_FOR_REAL_NAME: {{ .StateValues.ocelot.options.ASK_FOR_REAL_NAME | quote }}
-    REQUIRE_LOCATION: {{ .StateValues.ocelot.options.REQUIRE_LOCATION | quote }}
-    MAX_GROUP_PINNED_POSTS: {{ .StateValues.ocelot.options.MAX_GROUP_PINNED_POSTS | quote }}
-    API_KEYS_ENABLED: {{ .StateValues.ocelot.options.API_KEYS_ENABLED | quote }}
-    API_KEYS_MAX_PER_USER: {{ .StateValues.ocelot.options.API_KEYS_MAX_PER_USER | quote }}
 
 maintenance:
   image:
