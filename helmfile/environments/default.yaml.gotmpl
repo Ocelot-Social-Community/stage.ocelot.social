@@ -26,3 +26,9 @@ ocelot:
         SHOW_CONTENT_FILTER_HEADER_MENU: "false"
         SHOW_CONTENT_FILTER_MASONRY_GRID: "true"
         SHOW_GROUP_BUTTON_IN_HEADER: "true"
+        # Contact identity. These used to live in branding/constants/emails.js; the runtime branding
+        # schema deliberately does not carry them (they are e-mail/link config, not brand design), so
+        # they are ENV now. Without them the backend falls back to the ocelot.social defaults.
+        SUPPORT_EMAIL: "hello@ocelot.social"
+        SUPPORT_LINK: "https://ocelot.social"
+        ORGANIZATION_LINK: "https://ocelot.social"

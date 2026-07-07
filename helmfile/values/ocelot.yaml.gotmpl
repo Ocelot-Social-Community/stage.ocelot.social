@@ -31,6 +31,9 @@ backend:
     SHOW_GROUP_BUTTON_IN_HEADER: {{ .StateValues.ocelot.options.SHOW_GROUP_BUTTON_IN_HEADER | quote }}
     ASK_FOR_REAL_NAME: {{ .StateValues.ocelot.options.ASK_FOR_REAL_NAME | quote }}
     REQUIRE_LOCATION: {{ .StateValues.ocelot.options.REQUIRE_LOCATION | quote }}
+    SUPPORT_EMAIL: {{ .StateValues.ocelot.options.SUPPORT_EMAIL | quote }}
+    SUPPORT_LINK: {{ .StateValues.ocelot.options.SUPPORT_LINK | quote }}
+    ORGANIZATION_LINK: {{ .StateValues.ocelot.options.ORGANIZATION_LINK | quote }}
 
 webapp:
   image:
@@ -53,3 +56,13 @@ neo4j:
       memory: "2Gi"
     limits:
       memory: "4Gi"
+
+# Credentials for pulling private images, taken from the sops-encrypted `ghcr` key in
+# `environments/*.secrets.yaml`. While that key is absent — the normal case, as long as every image
+# the instance pulls is public — this renders nothing and no pull Secret is created.
+{{- $pullCredentials := index .StateValues "ghcr" | default list }}
+{{- if $pullCredentials }}
+imagePullCredentials:
+  registries:
+{{ $pullCredentials | toYaml | indent 4 }}
+{{- end }}

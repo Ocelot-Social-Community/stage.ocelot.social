@@ -19,6 +19,11 @@ releases:
   - name: {{ .StateValues.deploy.RELEASE_NAME_OCELOT }}
     namespace: {{ .StateValues.deploy.NAMESPACE }}
     chart: ocelot-social/ocelot-social
+    # Order the helm operations so Neo4j is applied first. This does NOT wait for the database
+    # to be ready — the backend pod does that itself in its wait-db initContainer — it just
+    # stops the backend from being rolled out ahead of a database that does not exist yet.
+    needs:
+      - ocelot-neo4j
     values:
     - ./values/ocelot.yaml.gotmpl
     secrets:

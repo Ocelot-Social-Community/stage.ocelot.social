@@ -1,1 +1,5 @@
 .DS_Store
+
+# Build output of `npm run build` (ocelot-brand-archive) in branding/. Not a deploy input: the
+# webapp/maintenance images rebuild the archive from brand.config.ts at image-build time.
+branding/dist/
