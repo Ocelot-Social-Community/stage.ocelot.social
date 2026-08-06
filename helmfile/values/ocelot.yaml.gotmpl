@@ -14,7 +14,6 @@ global:
 backend:
   image:
     repository:  ghcr.io/{{ .StateValues.deploy.GITHUB_REPOSITORY | lower }}/backend
-  storage: "10Gi"
   env:
     NEO4J_URI: "bolt://ocelot-neo4j-neo4j:7687"
     PRODUCTION_DB_CLEAN_ALLOW: {{ .StateValues.ocelot.options.PRODUCTION_DB_CLEAN_ALLOW | quote }}
