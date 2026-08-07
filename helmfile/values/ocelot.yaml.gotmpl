@@ -43,6 +43,10 @@ webapp:
 maintenance:
   image:
     repository: ghcr.io/{{ .StateValues.deploy.GITHUB_REPOSITORY | lower }}/maintenance
+  env:
+    # Address the maintenance page shows. Fed by the same StateValue as backend.env.SUPPORT_EMAIL,
+    # so the page and the app cannot drift; the chart falls back to that value when this is unset.
+    SUPPORT_EMAIL: {{ .StateValues.ocelot.options.SUPPORT_EMAIL | quote }}
 
 neo4j:
   image:
