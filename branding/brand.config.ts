@@ -73,16 +73,18 @@ export default defineBranding({
   // All content paths are ROOT-relative (assets/…, html/…); the multi-brand build namespaces them
   // to /branding/stage/… (collision-free) and serves the folder dynamically — no image copy.
   logos: {
-    headerPath: 'assets/logo-horizontal.svg',
-    headerMobilePath: 'assets/logo-horizontal.svg',
-    signupPath: 'assets/logo-squared.svg',
-    welcomePath: 'assets/logo-squared.svg',
-    logoutPath: 'assets/logo-squared.svg',
-    passwordResetPath: 'assets/logo-squared.svg',
+    headerPath: 'assets/logo-horizontal.png',
+    headerMobilePath: 'assets/logo-horizontal.png',
+    signupPath: 'assets/logo-squared.png',
+    welcomePath: 'assets/logo-squared.png',
+    logoutPath: 'assets/logo-squared.png',
+    passwordResetPath: 'assets/logo-squared.png',
   },
   assets: {
     css: [],
     html,
     favicon: 'assets/favicon.ico',
+    // PWA install + apple-touch icon. 512px, transparent — rendered from assets/icon.svg.
+    icon: 'assets/icon.png',
   },
 })
