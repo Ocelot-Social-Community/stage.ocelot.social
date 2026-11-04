@@ -84,7 +84,8 @@ export default defineBranding({
     css: [],
     html,
     favicon: 'assets/favicon.ico',
-    // PWA install + apple-touch icon. 512px, transparent — rendered from assets/icon.svg.
+    // The square raster icon: apple-touch-icon (iOS home screen) + PWA install icon. Unset, both fall
+    // back to the framework's own file — the vanilla ocelot — on this fully branded instance.
     icon: 'assets/icon.png',
   },
 })
