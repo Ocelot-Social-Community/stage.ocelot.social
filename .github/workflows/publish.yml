@@ -1,6 +1,23 @@
 name: publish
 
-on: push
+on:
+  push:
+  # Started by ocelot.social's docker-push workflow whenever the branch release-please keeps for the
+  # next release has its images in the registry: stage runs what the next release will be. It
+  # passes that commit's immutable `sha-<40 hex>` tag, which wins over $OCELOT_VERSION in .env;
+  # by hand, leave it empty to build on .env's version.
+  workflow_dispatch:
+    inputs:
+      ocelot-version:
+        description: ocelot.social image tag to build on (empty = OCELOT_VERSION from .env)
+        required: false
+        type: string
+
+# One build per ref at a time, the newest wins: ocelot.social dispatches on every merge, and an
+# older build finishing last would point the branch tag back at older images.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-and-push-images:
@@ -34,6 +51,11 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Read $OCELOT_VERSION from file
         run: cat .env >> $GITHUB_ENV
+      - name: Take the dispatched ocelot.social version over .env's
+        if: inputs.ocelot-version != ''
+        env:
+          DISPATCHED: ${{ inputs.ocelot-version }}
+        run: echo "OCELOT_VERSION=${DISPATCHED}" >> "$GITHUB_ENV"
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@70b2cdc6480c1a8b86edf1777157f8f437de2166
