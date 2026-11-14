@@ -2,6 +2,12 @@ name: publish
 
 on:
   push:
+    # flux/ and helmfile/ are deployment configuration, not image input. flux/ is also where the
+    # job roll-out-staging commits the tag it rolls out (GITHUB_TOKEN pushes trigger nothing anyway,
+    # a person's edit of flux/ would).
+    paths-ignore:
+      - 'flux/**'
+      - 'helmfile/**'
   # Started by ocelot.social's docker-push workflow whenever the branch release-please keeps for the
   # next release has its images in the registry: stage runs what the next release will be. It
   # passes that commit's immutable `sha-<40 hex>` tag, which wins over $OCELOT_VERSION in .env;
@@ -30,6 +36,11 @@ jobs:
             file: docker/webapp.Dockerfile
           - name: maintenance
             file: docker/maintenance.Dockerfile
+          # The build stage of the backend: what the reseed job runs (flux/staging/seed.yaml), as
+          # the seed needs tsx and faker, which the runtime image does not ship.
+          - name: backend-seed
+            file: docker/backend.Dockerfile
+            target: build
     runs-on: ubuntu-latest
     env:
       REGISTRY: ghcr.io
@@ -50,12 +61,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Read $OCELOT_VERSION from file
-        run: cat .env >> $GITHUB_ENV
+        run: cat .env >> "$GITHUB_ENV"
       - name: Take the dispatched ocelot.social version over .env's
         if: inputs.ocelot-version != ''
         env:
           DISPATCHED: ${{ inputs.ocelot-version }}
         run: echo "OCELOT_VERSION=${DISPATCHED}" >> "$GITHUB_ENV"
+      # `<branch>-<run number>-<sha7>`, the tag roll-out-staging writes into flux/staging/.
+      # The run number, not the commit time: a dispatched rebuild of the same commit on newer
+      # ocelot.social images has to win over the build before it, and it is the same for every image
+      # of one run.
+      - name: Short commit sha
+        id: short
+        run: echo "sha=${GITHUB_SHA::7}" >> "$GITHUB_OUTPUT"
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@70b2cdc6480c1a8b86edf1777157f8f437de2166
@@ -69,6 +87,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
             type=sha
+            type=raw,value=${{ github.ref_name }}-${{ github.run_number }}-${{ steps.short.outputs.sha }},enable=${{ github.ref_type == 'branch' && !contains(github.ref_name, '/') }}
           labels: |
             ocelot-version=${{ env.OCELOT_VERSION }}
       - name: Build and push Docker images
@@ -76,34 +95,72 @@ jobs:
         uses: docker/build-push-action@4f58ea79222b3b9dc2c8bbdd6debcef730109a75
         with:
           file:  ${{ matrix.app.file }}
-          context: ${{ matrix.app.context || '.' }}
+          target: ${{ matrix.app.target }}
+          context: .
           push: true
           build-args: |
               OCELOT_VERSION=${{ env.OCELOT_VERSION }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-  deploy-to-kubernetes:
+  # Rolls the build out to stage: commits its tag into flux/staging/, which Flux on the staging
+  # cluster applies (IT4Change/flux, clusters/staging/stage-ocelot-social.yaml). Every build of
+  # master, pushed or dispatched by ocelot.social's docker-push.
+  roll-out-staging:
     runs-on: ubuntu-latest
-    if: ${{ startsWith(github.ref, 'refs/tags/') }}
     needs: build-and-push-images
+    if: ${{ github.ref == 'refs/heads/master' }}
+    concurrency:
+      group: roll-out-staging
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    env:
+      FLUX_WEBHOOK_URL: ${{ secrets.FLUX_WEBHOOK_URL }}
+      FLUX_WEBHOOK_TOKEN: ${{ secrets.FLUX_WEBHOOK_TOKEN }}
     steps:
-      - uses: mdgreenwald/mozilla-sops-action@d9714e521cbaecdae64a89d2fdd576dd2aa97056 # v1.6.0
       - uses: actions/checkout@eef61447b9ff4aafe5dcd4e0bbf5d482be7e7871 # v4.1.7
-      - run: |
-          mkdir -p ~/.config/sops/age
-          echo $SOPS_KEY | base64 --decode > ~/.config/sops/age/keys.txt
-        env:
-          SOPS_KEY: ${{ secrets.SOPS_KEY }}
-      - run: |
-          mkdir -p ~/.kube
-          sops decrypt ./helmfile/secrets/kubeconfig > ~/.kube/config
-          chmod 600 ~/.kube/config
-      - uses: helmfile/helmfile-action@80fbb6408b98822310f94d8d1321a2cacf87f78f #v1.9.2
         with:
-          helmfile-args: apply
-          helmfile-workdirectory: ./helmfile
-          helm-plugins: >
-            https://github.com/databus23/helm-diff,
-            https://github.com/jkroepke/helm-secrets,
-            https://github.com/aslafy-z/helm-git
+          ref: master
+      - name: Write the image tag
+        run: |
+          tag="master-${GITHUB_RUN_NUMBER}-${GITHUB_SHA::7}"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          # A push of somebody else in between makes ours fail: start over from the new master.
+          for _ in 1 2 3; do
+            git fetch --quiet origin master
+            git reset --quiet --hard origin/master
+            current=$(grep -m1 -oE 'master-[0-9]+-[0-9a-f]{7}' flux/staging/ocelot.yaml || true)
+            current_run=${current#master-}
+            current_run=${current_run%%-*}
+            if [ -n "$current_run" ] && [ "$current_run" -ge "$GITHUB_RUN_NUMBER" ]; then
+              echo "staging already runs ${current}, not going back to ${tag}"
+              exit 0
+            fi
+            sed -i -E "/# image tag: written by publish.yml/ s/(master-[0-9]+-[0-9a-f]{7}|sha-[0-9a-f]{7})/${tag}/" flux/staging/*.yaml
+            git commit --quiet -am "chore(staging): roll out ${tag}"
+            if git push --quiet origin HEAD:master; then
+              echo "rolled out ${tag}"
+              exit 0
+            fi
+          done
+          echo "::error::could not push the image tag after three attempts"
+          exit 1
+      # Only a hint: Flux finds the commit within a minute anyway. Skipped while the secrets are not
+      # set.
+      - name: Notify Flux
+        run: |
+          if [ -z "$FLUX_WEBHOOK_URL" ] || [ -z "$FLUX_WEBHOOK_TOKEN" ]; then
+            echo "FLUX_WEBHOOK_URL / FLUX_WEBHOOK_TOKEN not set, Flux finds the commit by polling"
+            exit 0
+          fi
+          body="{\"ref\":\"${GITHUB_REF}\",\"sha\":\"${GITHUB_SHA}\"}"
+          signature=$(printf '%s' "$body" | openssl dgst -sha256 -hmac "$FLUX_WEBHOOK_TOKEN" -r | cut -d' ' -f1)
+          curl --fail-with-body --silent --show-error --max-time 30 \
+            -H "Content-Type: application/json" \
+            -H "X-Signature: sha256=${signature}" \
+            -d "$body" "$FLUX_WEBHOOK_URL"
+
+# No cluster access from here, and no GitHub credential in the cluster: the workflow only writes to
+# this repo, Flux on the cluster reads it (flux/staging/).

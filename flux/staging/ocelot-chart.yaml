@@ -1,0 +1,22 @@
+# The ocelot.social charts, straight from its repository. Only the charts are fetched.
+#
+# Its own source, not the `ocelot-social` one of paxfamily.social on the same cluster: an object
+# belongs to the one Kustomization that applies it, and two applying the same one would undo each
+# other's changes and prune it when either goes.
+#
+# master, not the release branch the images come from: release-please deletes that branch when a
+# release is cut, and this source would fail until the next merge brings it back. The two differ
+# only in the release's version bump and changelog.
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: stage-ocelot-social-charts
+  namespace: flux-system
+spec:
+  interval: 10m
+  url: https://github.com/Ocelot-Social-Community/Ocelot-Social
+  ref:
+    branch: master
+  ignore: |
+    /*
+    !/deployment/helm/charts/
