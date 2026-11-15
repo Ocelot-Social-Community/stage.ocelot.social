@@ -1,0 +1,48 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: stage-ocelot-social-neo4j
+  namespace: flux-system
+spec:
+  interval: 10m
+  # The release helmfile created, taken over in place: same name, same namespace, so its volume
+  # and data stay.
+  releaseName: ocelot-neo4j
+  targetNamespace: ocelot-staging
+  storageNamespace: ocelot-staging
+  # No waiting for readiness, as helmfile did not wait either. The chart's backups claim is mounted by
+  # no workload, so on a WaitForFirstConsumer storage class it stays Pending for good, and a waiting
+  # install or upgrade times out on it every time. Nothing needs the wait: the backend waits for the
+  # database itself (its wait-db init container).
+  install:
+    createNamespace: true
+    disableWait: true
+  upgrade:
+    disableWait: true
+  chart:
+    spec:
+      chart: ./deployment/helm/charts/ocelot-neo4j
+      sourceRef:
+        kind: GitRepository
+        name: stage-ocelot-social-charts
+      reconcileStrategy: Revision
+  valuesFrom:
+    - kind: Secret
+      name: stage-ocelot-social-values
+      valuesKey: values.yaml
+  values:
+    # As helmfile rendered it: the shared values file set Always for both charts.
+    global:
+      image:
+        pullPolicy: Always
+    neo4j:
+      image:
+        repository: ghcr.io/ocelot-social-community/ocelot-social/neo4j
+        tag: master
+      storage: 5Gi
+      storageBackups: 10Gi
+      resources:
+        requests:
+          memory: 2Gi
+        limits:
+          memory: 4Gi

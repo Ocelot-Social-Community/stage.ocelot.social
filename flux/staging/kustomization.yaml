@@ -1,0 +1,13 @@
+# The deployment of stage.ocelot.social, applied by Flux on the staging cluster
+# (IT4Change/flux, clusters/staging/stage-ocelot-social.yaml). Every Flux object lives in
+# flux-system; the workloads go to ocelot-staging through the HelmReleases' targetNamespace.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ocelot-chart.yaml
+  - values.sops.yaml
+  - neo4j.yaml
+  - ocelot.yaml
+  - receiver.yaml
+  - receiver-token.sops.yaml
+  - seed.yaml

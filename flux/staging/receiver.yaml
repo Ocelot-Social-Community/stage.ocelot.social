@@ -1,0 +1,20 @@
+# "Check now" for this repo, called by publish.yml once it has committed a new image tag to
+# flux/staging/. Without it Flux still finds the commit within the GitRepository's interval. The
+# token only allows that: what runs is what the repo says.
+#
+# URL: https://deploy.it4c.org + the receiver's path, `kubectl -n flux-system get receiver
+# stage-ocelot-social -o jsonpath='{.status.webhookPath}'`. Goes into the repo's GitHub secrets
+# FLUX_WEBHOOK_URL (whole URL) and FLUX_WEBHOOK_TOKEN (the token of receiver-token.sops.yaml).
+apiVersion: notification.toolkit.fluxcd.io/v1
+kind: Receiver
+metadata:
+  name: stage-ocelot-social
+  namespace: flux-system
+spec:
+  type: generic-hmac
+  secretRef:
+    name: stage-ocelot-social-receiver-token
+  resources:
+    - apiVersion: source.toolkit.fluxcd.io/v1
+      kind: GitRepository
+      name: stage-ocelot-social
