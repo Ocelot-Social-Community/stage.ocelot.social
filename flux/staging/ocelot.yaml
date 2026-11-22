@@ -34,7 +34,7 @@ spec:
     global:
       image:
         # The newest image build of this repo's master, written by publish.yml (roll-out-staging).
-        tag: master-967-966d044 # image tag: written by publish.yml
+        tag: master-968-05ea2d9 # image tag: written by publish.yml
         pullPolicy: Always
     backend:
       image:
