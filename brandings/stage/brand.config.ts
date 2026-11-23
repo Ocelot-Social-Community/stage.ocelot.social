@@ -88,4 +88,7 @@ export default defineBranding({
     // back to the framework's own file — the vanilla ocelot — on this fully branded instance.
     icon: 'assets/icon.png',
   },
+  theme: {
+    colorScheme: 'light dark',
+  },
 })
