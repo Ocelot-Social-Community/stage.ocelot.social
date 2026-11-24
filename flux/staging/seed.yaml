@@ -22,7 +22,7 @@ spec:
             - name: reseed
               # The build stage of backend.Dockerfile: the seed needs tsx and faker, which the runtime
               # image does not ship. Same build as the running backend (ocelot.yaml).
-              image: ghcr.io/ocelot-social-community/stage.ocelot.social/backend-seed:master-1011-1243d0b # image tag: written by publish.yml
+              image: ghcr.io/ocelot-social-community/stage.ocelot.social/backend-seed:master-1012-6936d9c # image tag: written by publish.yml
               # Refuses unless the instance allows it (DB_WIPE_ALLOWED in the backend's config map): the
               # same job applied to a production namespace finds it off there and wipes nothing.
               command:
